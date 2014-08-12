@@ -1,0 +1,46 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+<script src="JSONeditorA.js"></script>
+<script src="JSONeditorB.js"></script>
+<style>
+	#tree1{
+		display: inline-block !important; 
+		vertical-align: top;
+	}
+	#tree2{
+		display: inline-block !important; 
+		vertical-align: top;
+	}
+</style>
+<script>
+onload=function(){
+	var x = JSONeditorA;
+	var y = JSONeditorB;
+
+	$.ajax({
+		url:"sample0.json"
+	}).success(function(c){
+		console.log(c);
+		x.start('tree1','jform1',c)
+		y.start('tree2','jform2',c)
+	}).fail(function(c){
+		console.log("FAIL");
+		console.log(c);
+	});
+	
+	
+}
+</script>
+</head>
+<body>
+
+<div style="" id="tree1"></div>
+<div style="display: inline-block; margin-left: 10px;" id="jform1"></div>
+
+<div style="" id="tree2"></div>
+<div style="display: inline-block; margin-left: 10px;" id="jform2"></div>
+
+</body>
+</html>
