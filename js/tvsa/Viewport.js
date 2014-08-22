@@ -28,6 +28,7 @@ Ext.define('TVSA.Viewport', {
             collapsible : true,
             split       : true,
             width       : 350,
+            url         : './template.js',
             listeners : {
                 'itemclick' : function(_me, record, item, index, e ){
 
