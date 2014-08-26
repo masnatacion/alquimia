@@ -2,6 +2,7 @@
 //https://github.com/Peekmo/JsonPath
 require("jsonpath/JsonStore.php");
 
+
     $input      = json_decode(file_get_contents("data.js"),true); // results.titulo
     $template   = json_decode(file_get_contents("template.js"),true); //records.items
 
@@ -11,60 +12,112 @@ require("jsonpath/JsonStore.php");
 
     $paths = [
         [
-            "key" => "category[*].program[*].nameprog",
-            "value" =>"title"  
+          "path"  => "category[*].program[*]",
+            "key"   => "nameprog",
+            "value" => "title"  
         ],
         [
-            "key" => "category[*].program[0].videos[*].urls.app_iphone",
-            "value" =>"data.iphone" 
+          "path"  => "category[*].program[*].videos[*]",
+            "key"   => "urls.app_iphone",
+            "value" => "data.iphone" 
         ]
     ];
 
 
+function extract_data($record,$string) {
 
+    $current_data = $record;
 
+    foreach ($string as $name) {
 
-
-    function node($paths,$input,&$output,$template)
-    {
-	    foreach ($paths as $path) {
-
-
-	        // $akey = explode(".",$path["key"]);
-	        // $key  = implode("[*].",$akey);
-	        $key = $path["key"];
-
-	        $avalue = explode(".",$path["value"]);
-	        $value  = '["'.implode('"]["',$avalue).'"]';
-
-	        $store = new JsonStore();
-	        $inputs = $store->get($input, "$.".$key);
-
-	        foreach ($inputs as $i => $record) {
-
-	        	
-
-	        	if (!array_key_exists($i, $output))
-	            	$output[$i] = $template;
-
-
-	            	//print_r($input);
-
-	                eval("\$output[$i]$value = '$record';");
-
-
-	                node([$paths[1]],$output[$i],$output,$template);
-	                //print_r($output);
-	        }
-
-	        break;
-
-	    }
+            if (key_exists($name, $current_data)) {
+                    $current_data = $current_data[$name];
+            } else {
+                    return null;
+            }
     }
 
-    node($paths,$input,$output,$template);
+    return $current_data;
+} 
 
-    print_r($output);
+    function node($paths,$id,$j,$input,$template,$output)
+    {
+      // foreach ($paths as $path) {
+
+		$node = $paths[$id];
+
+		if($id > 0)
+		{
+			$apath = explode(".",$node["path"]);
+			$path  = $apath[count($apath)-1];
+		}else
+			$path = $node["path"];
+
+
+		$akey = explode(".",$node["key"]);
+		$key  = '["'.implode('"]["',$akey).'"]';
+
+
+
+		$avalue = explode(".",$node["value"]);
+		$value  = '["'.implode('"]["',$avalue).'"]';
+
+		if($id > 0)
+			$value  = '["'.implode('"]["',$avalue).'"][]';
+
+		$store = new JsonStore();
+		$inputs = $store->get($input, "$.".$path);
+
+		$tpath = count($paths)-1;
+
+
+
+		// if($path === "videos[*]")
+		// {
+		// 	print_r($input);
+		// 	echo $path."\n";
+		// 	echo "-----\n";
+		// }
+
+		if($id < $tpath)
+			$id++;
+
+		foreach ($inputs as $i => $record) {
+
+
+			// if (!@array_key_exists($i, $output))
+			// 	$output[$i] = $template;
+			    
+
+
+				$return = extract_data($record,$akey);
+				// print_r($return);
+				// echo $value."\n";
+				if(!empty($return))
+			    	eval("\$output[$j]$value = \"$return\";");
+
+			    $output = node($paths,$id,$i,$record,$template,$output);
+
+		}
+
+
+
+
+         return $output;
+
+      // }
+    }
+
+
+
+
+    $nodes = node($paths,0,0,$input,$template,$output=[]);
+
+
+
+
+    print_r($nodes);
+
     
 
 
