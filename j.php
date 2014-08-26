@@ -85,16 +85,22 @@ function extract_data($record,$string) {
 		foreach ($inputs as $i => $record) {
 
 
-			// if (!@array_key_exists($i, $output))
-			// 	$output[$i] = $template;
+			if (!@array_key_exists($i, $output) and $j == 0)
+			 	$output[$i] = $template;
 			    
 
 
 				$return = extract_data($record,$akey);
-				// print_r($return);
-				// echo $value."\n";
+				
+				
 				if(!empty($return))
-			    	eval("\$output[$j]$value = \"$return\";");
+				{	
+					
+					if($j == 0)
+						eval("\$output[$i]$value = \"$return\";");	
+					else
+						eval("\$output[$j]$value = \"$return\";");
+				}
 
 			    $output = node($paths,$id,$i,$record,$template,$output);
 
