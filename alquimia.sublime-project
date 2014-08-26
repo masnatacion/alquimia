@@ -8,6 +8,18 @@
 		{
 			"follow_symlinks": true,
 			"path": "/Users/miguelmartinez/Sites/masnatacion_old"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "/Users/miguelmartinez/Sites/jsonTree"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "/Users/miguelmartinez/Sites/groundbreaker"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "/Users/miguelmartinez/Sites/uci"
 		}
 	]
 }

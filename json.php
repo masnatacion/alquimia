@@ -6,6 +6,94 @@ $template 	= json_decode(file_get_contents("template.js"),true); //records.items
 
 
 
+$haystack = array(
+    'root_trrreeee1' => array(
+        'path1' => array(
+            'description' => 'etc',
+            'child_of_path_1' => array(
+                array('name2' => '2'),
+                array('name2' => '2')
+            )
+        ),
+        'path1' => array(
+            'description' => 'etc',
+            'child_of_path_1' => array(
+                array('name2' => '1'),
+                array('name2' => '1')
+            )
+        ),
+    ),
+    'name' => '1',
+    1 => array('name' => '1'),
+    'another_leaf' => '1'
+);
+
+
+$needle = array(
+    "name2"
+);
+
+
+
+function multidimensional_preserv_key_search($haystack, $needle, $path = array(), &$true_path = array())
+{
+    if (empty($needle) || empty($haystack)) {
+        return false;
+    }
+
+    foreach ($haystack as $key => $value) {
+
+        foreach ($needle as $skey => $svalue) {
+
+
+
+            if (is_array($value)) {
+                $path = multidimensional_preserv_key_search($value, $needle, array($key => $path), $true_path);
+            }
+
+            echo $key."\n";
+            if($key == $svalue){
+
+            //if (($value === $svalue) && ($key === $skey)) {
+            	print_r($value);
+                //$true_path = $path;
+
+                //return $true_path;
+            }
+        }
+
+    }
+
+    //if (is_array($true_path)) { return array_reverse(($true_path)); }
+    return $path;
+}
+
+
+function flatten_keys($array)
+{
+    $result = array();
+
+    foreach($array as $key => $value) {
+        if(is_array($value)) {
+            $result[] = $key;
+            $result = array_merge($result, self::flatten_keys($value));
+        } else {
+            $result[] = $key;
+        }
+    }
+
+    return $result;
+}
+
+
+
+$r = multidimensional_preserv_key_search($haystack, $needle);
+
+// print_r($r);
+
+die;
+
+
 // function array_get($arr, $path)
 // {
 //     if (!$path)
@@ -158,6 +246,23 @@ $paths = [
 ];
 
 
+// function doSomething(&$complex_array,$index)
+// {
+//     foreach ($complex_array as $n => $v)
+//     {
+//         if (is_array($v))
+//             doSomething($v);
+//         else
+//             do whatever you want to do with a single node
+//     }
+// }
+
+
+
+
+
+
+
 	function node($tree,$path)
 	{
 		$node 	 = $tree;
@@ -189,7 +294,6 @@ $paths = [
 
 
 
-
 foreach ($paths as $path) {
 
 
@@ -200,9 +304,12 @@ foreach ($paths as $path) {
 	$pathTemplate 	= explode("/",$idTemplate);
 
 
+	//seekValue($data,);
+
 	//print_r($data["category"][0]["program"]);
-	$records = node($data,$path);
-	print_r($records);
+	 $records = node($data,$path);
+	  print_r($records);
+
 	// if(array_get($data, $idData ,$node,end($pathTemplate)))
 	// {
 		

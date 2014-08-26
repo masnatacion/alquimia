@@ -39,17 +39,19 @@ Ext.define('TVSA.Tree', {
 
             Ext.iterate(json, function(key, value) {
                 // console.log(key)
+                var id = idNode;
 
-                var id = idNode+"."+key;
-
+                if(Ext.isObject(value))
+                    id+="."+key;
+                else if(Ext.isArray(value))
+                    id+="."+key+"[*]";
+                else
+                    id+="."+key;
                     //console.log(id)
 
                     //console.log(newNode)
                     // var node = store.getNodeById(idNode);
                     var expanded = isRoot;
-
-
-
 
                     var child = newNode.appendChild({
                         //expanded :expanded,

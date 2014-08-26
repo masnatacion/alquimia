@@ -7,5 +7,11 @@ Ext.application({
 
         Ext.create('TVSA.Viewport');
 
+        // TVSA = {
+        // 	setFeed : funcion(){
+        // 		Ext.getCmp('tvsafeed');
+        // 	}
+        // }
+
     }
 });

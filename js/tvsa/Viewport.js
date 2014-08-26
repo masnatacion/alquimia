@@ -1,12 +1,13 @@
 Ext.define('TVSA.Viewport', {
     extend : 'Ext.container.Viewport',
-    layout: 'border',
+    layout : 'border',
     initComponent: function (){
         
         var me = this;
 
         var tree1 = Ext.create("TVSA.Tree",{
             region      : 'west',
+            id          : 'tvsafeed',
             url         : './data.js',
             collapsible : true,
             split       : true,
@@ -24,6 +25,7 @@ Ext.define('TVSA.Viewport', {
 
         var tree2 = Ext.create("TVSA.Tree",{
             region      : 'east',
+            id          : 'tvsatemplate',
             title       : 'TEMPLATE FEED',
             collapsible : true,
             split       : true,
