@@ -17,10 +17,15 @@ require("jsonpath/JsonStore.php");
             "value" => "title"  
         ],
         [
-          "path"  => "category[*].program[*].videos[*]",
-            "key"   => "urls.app_iphone",
-            "value" => "data.iphone" 
-        ]
+          "path"  => "category[*].program[*]",
+            "key"   => "description",
+            "value" => "description"  
+        ],
+        // [
+        //   "path"  => "category[*].program[*].videos[*]",
+        //     "key"   => "urls.app_iphone",
+        //     "value" => "data.iphone" 
+        // ]
     ];
 
 
@@ -61,9 +66,9 @@ function extract_data($record,$string) {
 
 		$avalue = explode(".",$node["value"]);
 		$value  = '["'.implode('"]["',$avalue).'"]';
-
-		if($id > 0)
+		 if($id > 0)
 			$value  = '["'.implode('"]["',$avalue).'"][]';
+			
 
 		$store = new JsonStore();
 		$inputs = $store->get($input, "$.".$path);
@@ -72,15 +77,19 @@ function extract_data($record,$string) {
 
 
 
-		// if($path === "videos[*]")
+		// if($node["key"] === "description")
 		// {
-		// 	print_r($input);
-		// 	echo $path."\n";
-		// 	echo "-----\n";
+			print_r($input);
+			echo $path."\n";
+			echo $j."\n";
+			echo "-----\n";
 		// }
 
 		if($id < $tpath)
 			$id++;
+
+
+
 
 		foreach ($inputs as $i => $record) {
 
@@ -91,15 +100,24 @@ function extract_data($record,$string) {
 
 
 				$return = extract_data($record,$akey);
-				
+
 				
 				if(!empty($return))
 				{	
 					
+					$isset = @extract_data($output[$i],$avalue);
+				
+					//echo $isset."\n";
+					//print_r($isset);
+					
+
+
 					if($j == 0)
 						eval("\$output[$i]$value = \"$return\";");	
 					else
 						eval("\$output[$j]$value = \"$return\";");
+
+
 				}
 
 			    $output = node($paths,$id,$i,$record,$template,$output);
@@ -122,7 +140,7 @@ function extract_data($record,$string) {
 
 
 
-    print_r($nodes);
+    //print_r($nodes);
 
     
 

@@ -5,7 +5,7 @@
 		"iphone" : null,
 		"ipad":null
 	},
-	"image":null,
+	"description":null,
 	"video":null
 
 

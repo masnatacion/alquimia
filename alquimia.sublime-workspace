@@ -4,12 +4,32 @@
 		"selected_items":
 		[
 			[
-				"tr",
-				"tree1"
+				"is",
+				"is_array"
 			],
 			[
-				"is",
-				"isArray"
+				"is_a",
+				"is_array"
+			],
+			[
+				"array_m",
+				"array_merge"
+			],
+			[
+				"el",
+				"else"
+			],
+			[
+				"print",
+				"print_r"
+			],
+			[
+				"json_",
+				"json_encode"
+			],
+			[
+				"tr",
+				"tree1"
 			],
 			[
 				"json",
@@ -71,6 +91,70 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "/Users/miguelmartinez/Sites/groundbreaker/index.html",
+			"settings":
+			{
+				"buffer_size": 29323,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "j.php",
+			"settings":
+			{
+				"buffer_size": 2526,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "data.js",
+			"settings":
+			{
+				"buffer_size": 737589,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "template.js",
+			"settings":
+			{
+				"buffer_size": 121,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/miguelmartinez/Sites/groundbreaker/stylus/stylus.styl",
+			"settings":
+			{
+				"buffer_size": 101,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/miguelmartinez/Sites/groundbreaker/stylus/colors.styl",
+			"settings":
+			{
+				"buffer_size": 50,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/miguelmartinez/Sites/groundbreaker/stylus/topbar.styl",
+			"settings":
+			{
+				"buffer_size": 290,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/Users/miguelmartinez/Sites/groundbreaker/stylus/home.styl",
+			"settings":
+			{
+				"buffer_size": 50,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -170,6 +254,30 @@
 	},
 	"file_history":
 	[
+		"/Users/miguelmartinez/Sites/groundbreaker/template/_header.html",
+		"/Users/miguelmartinez/Sites/groundbreaker/template/index.html",
+		"/Users/miguelmartinez/Sites/uci/app/views/academic/academic.blade.php",
+		"/Users/miguelmartinez/Sites/uci/stylus/colors.styl",
+		"/Users/miguelmartinez/Sites/uci/app/views/academic/nuevo-alumno.blade.php",
+		"/Users/miguelmartinez/Sites/groundbreaker/stylus/main.styl",
+		"/Users/miguelmartinez/Sites/uci/stylus/stylus.styl",
+		"/Users/miguelmartinez/Sites/alquimia/j.php",
+		"/Users/miguelmartinez/Sites/alquimia/index.html",
+		"/Users/miguelmartinez/Sites/jsonTree/sample0.json",
+		"/Users/miguelmartinez/Sites/jsonTree/process.js",
+		"/Users/miguelmartinez/Sites/alquimia/js/tvsa/Tree.js",
+		"/Users/miguelmartinez/Sites/alquimia/data.js",
+		"/Users/miguelmartinez/Sites/alquimia/template.js",
+		"/Users/miguelmartinez/Sites/alquimia/app.js",
+		"/Users/miguelmartinez/Sites/alquimia/json.php",
+		"/Users/miguelmartinez/Sites/alquimia/js/tvsa/Viewport.js",
+		"/Users/miguelmartinez/Sites/alquimia/jsonpath/JsonPath.php",
+		"/Users/miguelmartinez/Sites/alquimia/jsonpath/JsonStore.php",
+		"/Users/miguelmartinez/Sites/masnatacion_old/application/helpers/base_helper.php",
+		"/Users/miguelmartinez/Sites/alquimia/json.js",
+		"/Users/miguelmartinez/Sites/masnatacion/application/helpers/base_helper.php",
+		"/Users/miguelmartinez/Sites/alquimia/js/json.js",
+		"/Users/miguelmartinez/Sites/alquimia/css/flags.css",
 		"/Users/miguelmartinez/Sites/masnatacion_old/js/masnatacion/admin/login/Form.js",
 		"/Users/miguelmartinez/Sites/televisa/js/tvsa/Grid.js",
 		"/Users/miguelmartinez/Sites/tokotu/dev.cube.academy/app/views/course/lessons.blade.php",
@@ -213,7 +321,6 @@
 		"/Users/miguelmartinez/Sites/uci/app/routes.php",
 		"/Users/miguelmartinez/Sites/uci/app/views/treasury/pagos-varios.blade.php",
 		"/Users/miguelmartinez/Sites/uci/app/views/login-topbar.blade.php",
-		"/Users/miguelmartinez/Sites/uci/stylus/stylus.styl",
 		"/Users/miguelmartinez/Sites/uci/app/views/treasury/dashboard.blade.php",
 		"/Users/miguelmartinez/Sites/uci/app/views/layout.blade.php",
 		"/Users/miguelmartinez/Sites/uci/app/views/treasury/treasury.blade.php",
@@ -228,7 +335,6 @@
 		"/Users/miguelmartinez/Sites/uci/app/views/registro-pago.blade.php",
 		"/Users/miguelmartinez/Sites/uci/package.json",
 		"/Users/miguelmartinez/Sites/uci/app/controllers/HomeController.php",
-		"/Users/miguelmartinez/Sites/uci/stylus/colors.styl",
 		"/Users/miguelmartinez/Sites/uci/CONTRIBUTING.md",
 		"/Users/miguelmartinez/Sites/tokotu/dev.lms.startersway.com/app/views/home.blade.php",
 		"/Users/miguelmartinez/Sites/uci/app/config/view.php",
@@ -275,33 +381,11 @@
 		"/Users/miguelmartinez/Sites/masnatacion/stylus/fonts.styl",
 		"/Users/miguelmartinez/Sites/masnatacion/application/controllers/evento.php",
 		"/Users/miguelmartinez/Sites/masnatacion/application/controllers/eventos.php",
-		"/Users/miguelmartinez/Sites/masnatacion/application/views/menu.php",
-		"/Users/miguelmartinez/Sites/masnatacion/application/views/home/menu-soynadador.php",
-		"/Users/miguelmartinez/Sites/masnatacion/application/views/videos/videos.php",
-		"/Users/miguelmartinez/Sites/masnatacion/application/views/dondenadar/untitled",
-		"/Users/miguelmartinez/Sites/masnatacion/application/views/video/video.php",
-		"/Users/miguelmartinez/Sites/masnatacion/application/controllers/video.php",
-		"/Users/miguelmartinez/Sites/masnatacion/application/views/lectura-deportiva/lectura-deportiva.php",
-		"/Users/miguelmartinez/Sites/masnatacion/application/views/home/menu-lecturadeportiva.php",
-		"/Users/miguelmartinez/Sites/masnatacion/application/views/home/menu-videos.php",
-		"/Users/miguelmartinez/Sites/masnatacion/application/controllers/lectura.php",
-		"/Users/miguelmartinez/Sites/masnatacion/application/views/lectura/lectura.php",
-		"/Users/miguelmartinez/Sites/masnatacion/application/controllers/lectura-deportiva.php",
-		"/Users/miguelmartinez/Sites/masnatacion/application/controllers/videos.php",
-		"/Users/miguelmartinez/Sites/masnatacion/application/views/evento/resultados.php",
-		"/Users/miguelmartinez/Sites/masnatacion/application/views/records/records.php",
-		"/Users/miguelmartinez/Sites/openenglish/dev.puroleads.com/httpdocs/config.php",
-		"/Users/miguelmartinez/Downloads/foundation-5.2.3/css/foundation.css",
-		"/Users/miguelmartinez/Sites/masnatacion/application/views/resultados/resultados.php",
-		"/Users/miguelmartinez/Sites/masnatacion/application/controllers/resultados.php",
-		"/Users/miguelmartinez/Sites/masnatacion/application/views/resultados/nadador.php",
-		"/Users/miguelmartinez/Sites/masnatacion/application/views/slide-menu.php",
-		"/Users/miguelmartinez/Sites/masnatacion/README.md",
-		"/Users/miguelmartinez/Sites/masnatacion/application/views/noticia/noticia.php"
+		"/Users/miguelmartinez/Sites/masnatacion/application/views/menu.php"
 	],
 	"find":
 	{
-		"height": 30.0
+		"height": 38.0
 	},
 	"find_in_files":
 	{
@@ -318,6 +402,29 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"nameprog",
+			"$value",
+			"die",
+			"key",
+			"logo",
+			"print log",
+			"logo",
+			"h3",
+			"main_menu",
+			".css",
+			"i.parent.foo.active a",
+			"li",
+			"_output",
+			"_setInOut",
+			"_output",
+			"paths",
+			"die",
+			"$result",
+			"array_get",
+			"print_r",
+			"array",
+			"group",
+			"ArrayGetPath",
 			"remove",
 			"getAt",
 			"delete",
@@ -422,35 +529,12 @@
 			"breadcrumbs",
 			"b5b5b5",
 			"icon-arrow-right",
-			"A8A8A8",
-			"first-level",
-			"4d4d4d",
-			"line_gray",
-			"LIGHT_GRAY",
-			"expand-menu",
-			"menu-title",
-			".accordion dd > a",
-			"7c7c7c",
-			"expand-menu",
-			"7c7c7c",
-			"b5b5b5",
-			".login",
-			".button.tiny",
-			"dd",
-			"A8A8A8",
-			";",
-			":",
-			"4288CA",
-			"dd",
-			"menu-profesores",
-			"icon-arrow-down",
-			"icon-arrow-right",
-			"first-level"
+			"A8A8A8"
 		],
 		"highlight": false,
 		"in_selection": false,
 		"preserve_case": false,
-		"regex": true,
+		"regex": false,
 		"replace_history":
 		[
 			"",
@@ -476,13 +560,241 @@
 		"show_context": true,
 		"use_buffer2": true,
 		"whole_word": false,
-		"wrap": true
+		"wrap": false
 	},
 	"groups":
 	[
 		{
+			"selected": 1,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "/Users/miguelmartinez/Sites/groundbreaker/index.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 29323,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								10507,
+								10507
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Djaneiro/Syntaxes/HTML (Django).tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 4363.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "j.php",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2526,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								748,
+								577
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/PHP/PHP.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 188.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "data.js",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 737589,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								737589,
+								737589
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 504695.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "template.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 121,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								96,
+								96
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "/Users/miguelmartinez/Sites/groundbreaker/stylus/stylus.styl",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 101,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								101,
+								82
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Stylus-master/Stylus.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/Users/miguelmartinez/Sites/groundbreaker/stylus/colors.styl",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 50,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								34,
+								39
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Stylus-master/Stylus.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "/Users/miguelmartinez/Sites/groundbreaker/stylus/topbar.styl",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 290,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								170,
+								129
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Stylus-master/Stylus.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "/Users/miguelmartinez/Sites/groundbreaker/stylus/home.styl",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 50,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								50,
+								50
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Stylus-master/Stylus.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -754,7 +1066,7 @@
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 257.0,
+	"side_bar_width": 239.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{
