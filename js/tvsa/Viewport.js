@@ -8,7 +8,7 @@ Ext.define('TVSA.Viewport', {
         var tree1 = Ext.create("TVSA.Tree",{
             region      : 'west',
             id          : 'tvsafeed',
-            url         : './data.js',
+            //url         : './data.js',
             collapsible : true,
             split       : true,
             title       : 'FEED DE ENTRADA',
@@ -30,7 +30,7 @@ Ext.define('TVSA.Viewport', {
             collapsible : true,
             split       : true,
             width       : 350,
-            url         : './template.js',
+            //url         : './template.js',
             listeners : {
                 'itemclick' : function(_me, record, item, index, e ){
 

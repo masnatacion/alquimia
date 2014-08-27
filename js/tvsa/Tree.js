@@ -29,7 +29,7 @@ Ext.define('TVSA.Tree', {
 
 
 
-    var Tree = {
+    me.Tree = {
 
 
         data : [],
@@ -90,30 +90,40 @@ Ext.define('TVSA.Tree', {
 
     };
 
-    if(!Ext.isEmpty(me.url))
-    {
-        me.setLoading("Cargando Feed");
-        
-        Ext.Ajax.request ({
-            url: me.url,
-            success: function (file) {
-                var json     = Ext.decode(file.responseText);
 
-                    var node = me.store.getRootNode();
-                    Tree.node(me.store,json,true,"tree",node);
-
-                    me.fireEvent("renderTree",me.store);
-                    node.expand();
-                    me.setLoading(false);
-
-
-            }
-        }); 
-    }
-
+    me.loadData(me.url);
 
     me.callParent(arguments);
 
+    },
+
+    loadData : function(url){
+        var me = this;
+        if(!Ext.isEmpty(url))
+        {
+            me.setLoading("Cargando Feed");
+            
+            Ext.Ajax.request ({
+                url: url,
+                success: function (file) {
+                    me.setData(file);
+                }
+            }); 
+        }
+    },
+    setData : function(file)
+    {
+        var me = this;
+        var json     = Ext.decode(file.responseText);
+
+            var node = me.store.getRootNode();
+            var Tree = me.Tree;
+            
+            Tree.node(me.store,json,true,"tree",node);
+
+            me.fireEvent("renderTree",me.store);
+            node.expand();
+            me.setLoading(false);
     },
 
     listeners : {
