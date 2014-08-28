@@ -1,6 +1,7 @@
 Ext.define('TVSA.Viewport', {
-    extend : 'Ext.container.Viewport',
+    extend : 'Ext.panel.Panel',
     layout : 'border',
+    height : 600,
     initComponent: function (){
         
         var me = this;

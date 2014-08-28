@@ -17,7 +17,6 @@ Ext.application({
                         var data = me.create.arguments[0];
 
                     me._view = Ext.create('TVSA.Viewport',Ext.applyIf(data,{
-                        id : 'TVSA.Viewport'
                     }));
             },
             show    : function(){
@@ -28,7 +27,7 @@ Ext.application({
                         var id = me.show.arguments[0];
 
                 if(!me._view)
-                    me.create({id:id});
+                    me.create({renderTo:id});
                 else
                     me._view.show();
 
