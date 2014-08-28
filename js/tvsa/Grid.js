@@ -15,7 +15,11 @@ Ext.define('TVSA.Grid', {
                     Ext.MessageBox.confirm('Eliminar', 'Se eliminara &#191;Esta seguro?', 
                         function(btn) {
                            if(btn=='yes') {
+
                             grid.getStore().removeAt(rowIndex);
+
+                            if(Ext.isDefined(TVSA._inputHidden))
+                                Ext.get(TVSA._inputHidden).dom.value = TVSA.getData();
                         }
                     });   
 
