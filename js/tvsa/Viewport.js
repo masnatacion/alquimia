@@ -44,6 +44,7 @@ Ext.define('TVSA.Viewport', {
 
         var grid = Ext.create('TVSA.Grid',{
             title  : 'RELACIÓNES',
+            id     : 'tvsagrid',
             autoHeight : true
         });
 
@@ -79,9 +80,11 @@ Ext.define('TVSA.Viewport', {
                     Ext.Msg.alert('Advertencia', 'Seleciona un nodo del FEED.');
                 }else
                 {
+                    var feed1 = node_tree1[0].data.id;
+                    var feed2 = node_tree2[0].data.id;
                     var id = node_tree1[0].data.id+"="+node_tree2[0].data.id;
 
-                    if(!grid.store.findRecord("id",id))
+                    if(!grid.store.findRecord("id",id) && !grid.store.findRecord("feed1",feed1) && !grid.store.findRecord("feed2",feed2))
                     {
                         grid.store.insert(0,{
                             id    : id,

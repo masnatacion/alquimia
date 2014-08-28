@@ -118,7 +118,7 @@ Ext.define('TVSA.Tree', {
 
             var node = me.store.getRootNode();
             var Tree = me.Tree;
-            
+
             Tree.node(me.store,json,true,"tree",node);
 
             me.fireEvent("renderTree",me.store);

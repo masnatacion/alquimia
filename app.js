@@ -5,10 +5,47 @@ Ext.application({
     launch: function() {
         var me = this;
 
-        
+         function getJsonOfStore(store){
+                var datar = new Array();
+                var jsonDataEncode = "";
+                var records = store.getRange();
+
+                for (var i = 0; i < records.length; i++)
+                    datar.push(records[i].data);
+                
+                return Ext.encode(datar);
+            }
 
         TVSA = {
             _view    : null,
+            resetGrid    : function(){
+                var me      = this,
+                    grid    = Ext.getCmp('tvsagrid'),
+                    store   = grid.store;
+
+                    store.removeAll();
+
+            },
+            save     : function(){
+                var me          = this,
+                    data        = [];
+
+                    if(me.create.arguments.length > 0)
+                    {
+                        var data = me.create.arguments[0];
+                        Ext.get(data).dom.value = me.getData();
+                    }
+
+            },
+
+            getData  : function(){
+                var me      = this,
+                    grid    = Ext.getCmp('tvsagrid'),
+                    store   = grid.store;
+
+                    return getJsonOfStore(store);
+
+            },
             create   : function(){
                 var me          = this,
                     data        = [];
