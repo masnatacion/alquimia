@@ -73,6 +73,7 @@ Ext.define('TVSA.Viewport', {
                 var node_tree1 = tree1.getSelectionModel().getSelection();
                 var node_tree2 = tree2.getSelectionModel().getSelection();
 
+                
 
 
                 if(node_tree1.length == 0 || node_tree2.length == 0)
@@ -91,6 +92,9 @@ Ext.define('TVSA.Viewport', {
                             feed1 : node_tree1[0].data.id,
                             feed2 : node_tree2[0].data.id
                         });
+
+                        if(Ext.isDefined(TVSA._inputHidden))
+                            Ext.get(TVSA._inputHidden).dom.value = TVSA.getData();
                     }
 
                 }

@@ -18,6 +18,28 @@ Ext.application({
 
         TVSA = {
             _view    : null,
+            _inputHidden : null,
+            resetAll     : function(){
+                var me = this;
+                me.resetTemplate();
+                me.resetFeed();
+                me.resetGrid();
+            },
+            resetTemplate : function(){
+                var me       = this,
+                    tree     = Ext.getCmp('tvsatemplate'),
+                    store    = tree.store;
+
+                    store.removeAll();
+
+            },
+            resetFeed    : function(){
+                var me       = this,
+                    tree     = Ext.getCmp('tvsafeed'),
+                    store    = tree.store;
+
+                    store.removeAll();
+            },
             resetGrid    : function(){
                 var me      = this,
                     grid    = Ext.getCmp('tvsagrid'),
@@ -30,9 +52,10 @@ Ext.application({
                 var me          = this,
                     data        = [];
 
-                    if(me.create.arguments.length > 0)
+                    if(me.save.arguments.length > 0)
                     {
-                        var data = me.create.arguments[0];
+                        var data = me.save.arguments[0];
+                        me._inputHidden = data;
                         Ext.get(data).dom.value = me.getData();
                     }
 
