@@ -28,17 +28,25 @@ Ext.application({
             resetTemplate : function(){
                 var me       = this,
                     tree     = Ext.getCmp('tvsatemplate'),
-                    store    = tree.store;
+                    store    = tree.store,
+                    childrens = store.getRootNode().childNodes;
 
-                    store.removeAll();
+                    if(childrens.length > 0)
+                        store.getRootNode().collapse();
+
+                    store.getRootNode().removeAll();
 
             },
             resetFeed    : function(){
                 var me       = this,
                     tree     = Ext.getCmp('tvsafeed'),
-                    store    = tree.store;
+                    store    = tree.store,
+                    childrens = store.getRootNode().childNodes;
 
-                    store.removeAll();
+                    if(childrens.length > 0)
+                        store.getRootNode().collapse();
+
+                    store.getRootNode().removeAll();
             },
             resetGrid    : function(){
                 var me      = this,
@@ -105,13 +113,22 @@ Ext.application({
                 var me       = this,
         		    tvsafeed = Ext.getCmp('tvsafeed');
 
-                tvsafeed.loadData(url);
+                me.resetFeed();    
+                
+                setTimeout(function(){
+                    tvsafeed.loadData(url);
+                }, 500);
+                
         	},
             setTemplate : function(url){
                 var me       = this,
                     tvsafeed = Ext.getCmp('tvsatemplate');
 
-                tvsafeed.loadData(url);
+                me.resetTemplate();
+
+                setTimeout(function(){
+                    tvsafeed.loadData(url);
+                }, 500);
             }
         };
 
