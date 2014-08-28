@@ -2,6 +2,7 @@ Ext.define('TVSA.Viewport', {
     extend : 'Ext.panel.Panel',
     layout : 'border',
     height : 600,
+    border : false,
     initComponent: function (){
         
         var me = this;
@@ -64,7 +65,7 @@ Ext.define('TVSA.Viewport', {
 
         var add = Ext.create('Ext.Button',{
             text : 'AGREGAR RELACIÓN',
-            margin: '20 200 40 200',
+            margin: '20 50 40 50',
             handler : function(){
 
 
@@ -141,7 +142,7 @@ Ext.define('TVSA.Viewport', {
         me.items =  [
         {
             region: 'north',
-            html: '<h1 class="x-panel-header">Feeds</h1>',
+            //html: '<h1 class="x-panel-header">Feeds</h1>',
             autoHeight: true,
             border: false,
             margins: '0 0 5 0'
