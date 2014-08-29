@@ -1,335 +1,166 @@
-<?php
-
-$data		= json_decode(file_get_contents("data.js"),true); // results.titulo
-$template 	= json_decode(file_get_contents("template.js"),true); //records.items
-
+<?
+//https://github.com/Peekmo/JsonPath
+require("jsonpath/JsonStore.php");
 
 
-
-$haystack = array(
-    'root_trrreeee1' => array(
-        'path1' => array(
-            'description' => 'etc',
-            'child_of_path_1' => array(
-                array('name2' => '2'),
-                array('name2' => '2')
-            )
-        ),
-        'path1' => array(
-            'description' => 'etc',
-            'child_of_path_1' => array(
-                array('name2' => '1'),
-                array('name2' => '1')
-            )
-        ),
-    ),
-    'name' => '1',
-    1 => array('name' => '1'),
-    'another_leaf' => '1'
-);
+    $input      = json_decode(file_get_contents("data.js"),true); // results.titulo
+    $template   = json_decode(file_get_contents("template.js"),true); //records.items
 
 
-$needle = array(
-    "name2"
-);
+    $store = new JsonStore();
 
 
+    $paths = [
+        [
+          "path"  => "category[*].program[*]",
+          "child" => [
+          				[
+				            "key"   => "nameprog",
+				            "value" => "title"  
+          				],
+          				[
+				            "key"   => "description",
+				            "value" => "description"  
+          				]
+         			 ]
 
-function multidimensional_preserv_key_search($haystack, $needle, $path = array(), &$true_path = array())
-{
-    if (empty($needle) || empty($haystack)) {
-        return false;
-    }
+        ],
 
-    foreach ($haystack as $key => $value) {
+        [
+          "path"  => "category[*].program[*].videos[*]",
+          "child" => [
+          				[
+				            "key"   => "urls.app_iphone",
+				            "value" => "data.iphone"  
+          				]
+         			 ]
+        ]
+    ];
 
-        foreach ($needle as $skey => $svalue) {
 
+function extract_data($record,$string) {
 
+    $current_data = $record;
 
-            if (is_array($value)) {
-                $path = multidimensional_preserv_key_search($value, $needle, array($key => $path), $true_path);
+    foreach ($string as $name) {
+
+            if (key_exists($name, $current_data)) {
+                    $current_data = $current_data[$name];
+            } else {
+                    return null;
             }
-
-            echo $key."\n";
-            if($key == $svalue){
-
-            //if (($value === $svalue) && ($key === $skey)) {
-            	print_r($value);
-                //$true_path = $path;
-
-                //return $true_path;
-            }
-        }
-
     }
 
-    //if (is_array($true_path)) { return array_reverse(($true_path)); }
-    return $path;
-}
+    return $current_data;
+} 
+
+    function node($paths,$id,$j,$input,$_input,$template,$output)
+    {
+      // foreach ($paths as $path) {
+
+		$node = $paths[$id];
+
+		if($id > 0)
+		{
+			$apath = explode(".",$node["path"]);
+			$path  = $apath[count($apath)-1];
+		}else
+			$path = $node["path"];
+
+				
+			$store = new JsonStore();
+			$inputs = $store->get($input, "$.".$path);
+
+			$tpath = count($paths)-1;
 
 
-function flatten_keys($array)
-{
-    $result = array();
-
-    foreach($array as $key => $value) {
-        if(is_array($value)) {
-            $result[] = $key;
-            $result = array_merge($result, self::flatten_keys($value));
-        } else {
-            $result[] = $key;
-        }
-    }
-
-    return $result;
-}
-
-
-
-$r = multidimensional_preserv_key_search($haystack, $needle);
-
-// print_r($r);
-
-die;
-
-
-// function array_get($arr, $path)
-// {
-//     if (!$path)
-//         return null;
-
-//     $segments = is_array($path) ? $path : explode('/', $path);
-//     $cur =& $arr;
-//     foreach ($segments as $segment) {
-//         if (!isset($cur[$segment]))
-//             return null;
-
-//         $cur = $cur[$segment];
-//     }
-
-//     return $cur;
-// }
-
-function array_set(&$arr, $path, $value)
-{
-    if (!$path)
-        $segments = [];
-    else
-    	$segments = is_array($path) ? $path : explode('/', $path);
-
-    $cur =& $arr;
-    foreach ($segments as $segment) {
-        if (!isset($cur[$segment]))
-            $cur[$segment] = array();
-        $cur =& $cur[$segment];
-    }
-    
-
-
-    // foreach ($value as $kvalue => $vvalue) {
-
-    // 	foreach ($vvalue as $k => $v) {
-    // 			foreach ($arr as $karr => $varr) {
-    // 				if($karr == $k)
-    // 					$records[$karr] = $v;
-    // 				else
-    // 					$records[$karr] = $varr;
-    // 			}
-    // 			$record[] = $records;
-    // 	}	
-
-    // }
-    //print_r($record);
-
-    $cur = $value;
-
-
-}
+			if($id < $tpath)
+				$id++;
 
 
 
 
-function    isAssociativeArray( &$arr ) {
-    return  (bool)( preg_match( '/\D/', implode( array_keys( $arr ) ) ) );
-}
+			foreach ($inputs as $i => $record) {
 
 
-function array_get($data, $path, &$node = [], $newKey = "",&$result = []){
- 
-    $found = true;
- 
-    $path = explode("/", $path);
+				if (!@array_key_exists($i, $output) and $j == 0)
+				 	$output[$i] = $template;
+				    
 
 
-    for ($x=0; ($x < count($path) and $found); $x++){
- 
-    	$key = $path[$x];
-
- 		if(isAssociativeArray($data))
- 		{
- 			
-	        if (isset($data[$key])){
-	            $data = $data[$key];
-
-	            if($x == count($path) -1)
-	            	$node = $data;
-	        }        
-	        // else { $found = false; }
-
- 		}else
- 		{
-
- 			
- 			
- 			foreach ($data as $record) {
-		        
-
-		        if (isset($record[$key])){
-		            //$data= $record[$key];
+					foreach ($node["child"] as $child) {
 
 
-		            //echo count($path);
+						$akey = explode(".",$child["key"]);
+						$key  = '["'.implode('"]["',$akey).'"]';
 
-		            if($x == count($path) -2)
-		            {
-		            	$is_assoc = $record[$key];
+						$return = extract_data($record,$akey);
 
-		            	if(isAssociativeArray($is_assoc))
-		            		$node[] =  [ $newKey =>$is_assoc[$path[count($path)-1]] ];
-		            	else
-		            		$data= $record[$key];
-		            }else
-		            	$data= $record[$key];
-
-		            if($x == count($path) -1)
-		            {
-		            	//$node[] = $record[$key];
-		            	if(empty($newKey))
-		            		$node[] = $record[$key];
-		            	else
-		            		$node[] = [$newKey => $record[$key]];
-		            }
+						$avalue = explode(".",$child["value"]);
+						// $value  = '["'.implode('"]["',$avalue).'"]';
+						//  if($id > 0)
+							$value  = '["'.implode('"]["',$avalue).'"][]';
 
 
-		        }        
-		        //else { $found = false; }
+						if(!empty($return))
+						{	
+							
+							//$isset = @extract_data($output[$i],$avalue);
+						
+							
+								if($j == 0)
+									eval("\$output[$i]$value = \"$return\";");	
+								else
+									eval("\$output[$j]$value = \"$return\";");
 
- 			}
- 			
- 		}
-
-    }
- 	
-    $result = $data;
- 
-    return $found;
-}
-
-
-/*
-feed.category.program.nameprog output.title
-feed.category.program.description output.data
-feed.category.program.imagestage	output.image
-feed.category.program.videos[0].urls.app_ipad	output.video
-*/
-
-$paths = [
-	// [
-	// 	"idData" => "category/program/nameprog",
-	// 	"idTemplate" =>"data/title"	
-	// ],
-	[
-		"idData" => "category/program/videos/urls/app_ipad",
-		"idTemplate" =>"data/iphone"	
-	]
-];
-
-
-// function doSomething(&$complex_array,$index)
-// {
-//     foreach ($complex_array as $n => $v)
-//     {
-//         if (is_array($v))
-//             doSomething($v);
-//         else
-//             do whatever you want to do with a single node
-//     }
-// }
-
-
-
-
-
-
-
-	function node($tree,$path)
-	{
-		$node 	 = $tree;
-		$records = [];
-
-		for ($x=0; ($x < count($path)); $x++){
-
-			$key  = $path[$x];
-			
-
-			if(isAssociativeArray($tree))
-			{
-				$records[$key] = [];
-				$tree = $tree[$key];
-			}
-			else
-			{
-				foreach ($tree as $record) {
-					$records[$key][] = [];
+						}
+					}
+					$output = node($paths,$id,$i,$record,$inputs,$template,$output);
+				
 				}
-				$tree = $tree[0][$key];
-			}
+
+         return $output;
 
 
-		}
+    }
 
-		return $records;
+
+
+
+    $nodes = node($paths,0,0,$input,$input,$template,$output=[]);
+
+
+	// Recursively traverses a multi-dimensional array.
+	function fix_keys($array) {
+	    $numberCheck = false;
+	    foreach ($array as $k => $val) {
+
+	    	// echo count($val)."\n";
+	    	// print_r($val); 
+	    	// echo "key =".$k."\n";
+	    	// echo "\n\n\n\n";
+
+	    	if(!is_numeric($k) and is_array($val) and array_key_exists(0, $val))
+	    	{
+	    		//$numberCheck = array("k" => $k,"v"=>$val);
+	    		//print_r($val);
+	        	$array[$k] = $val[0];
+	        	//return $array;
+	    	}
+
+	        if (is_array($val) and count($val) > 1) $array[$k] = fix_keys($val); //recurse
+
+	    }
+
+
+	    return $array;
 	}
 
-
-
-foreach ($paths as $path) {
-
-
-	$idData 	= $path["idData"];
-	$idTemplate = $path["idTemplate"];
-
-	$path = $pathData 		= explode("/",$idData);
-	$pathTemplate 	= explode("/",$idTemplate);
-
-
-	//seekValue($data,);
-
-	//print_r($data["category"][0]["program"]);
-	 $records = node($data,$path);
-	  print_r($records);
-
-	// if(array_get($data, $idData ,$node,end($pathTemplate)))
-	// {
-		
-	// 	print_r($node);
-		
-
-	// 	// array_set($template, implode("/",$pathTemplate), $node);
-	// 	unset($node);
-	 	
-	 
-	// }	
-
-
-}
-
-print_r($template);
-
-
-
-
-
+    //echo json_encode($nodes);
+	$fixed = fix_keys($nodes);
+	print_r($nodes);
+    //print_r($fixed);
+    //echo json_encode($fixed);
+    
 
 
