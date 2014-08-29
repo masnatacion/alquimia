@@ -75,7 +75,7 @@ class Node
 	private function _setChild($array) {
 	    $return = array();
 	    foreach($array as $val) 
-	    	$return[] = [ "path"=>$val[0]["path"], "child" => $val ];
+	    	$return[] = [ "path"=>$val[0]["path"],"order"=>count($val[0]["path"]), "child" => $val ];
 	    
 	    return $return;
 	}
@@ -126,8 +126,10 @@ class Node
 
 		$paths = $this->_parsePATHS();	
 		$paths = $this->_groupBy($paths,"path");
+		$paths = $this->_setChild($paths);
+		$this->_sortBycolumn($paths,"order");
 
-		return $this->_setChild($paths);
+		return $paths;
 	}
 
 
@@ -274,8 +276,9 @@ class Node
 */
 
 $paths = [
-	["feed1"=>"tree.category[*].program[*].nameprog","feed2"=>"tree.title"],
 	["feed1"=>"tree.category[*].program[*].videos[*].urls.app_iphone","feed2"=>"tree.data.iphone"],
+	["feed1"=>"tree.category[*].program[*].nameprog","feed2"=>"tree.title"],
+	
 	["feed1"=>"tree.category[*].program[*].description","feed2"=>"tree.description"],
 	["feed1"=>"tree.category[*].program[*].videos[*].urls.app_ipad","feed2"=>"tree.data.ipad"],
 ];
