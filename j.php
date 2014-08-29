@@ -13,19 +13,28 @@ require("jsonpath/JsonStore.php");
     $paths = [
         [
           "path"  => "category[*].program[*]",
-            "key"   => "nameprog",
-            "value" => "title"  
+          "child" => [
+          				[
+				            "key"   => "nameprog",
+				            "value" => "title"  
+          				],
+          				[
+				            "key"   => "description",
+				            "value" => "description"  
+          				]
+         			 ]
+
         ],
+
         [
-          "path"  => "category[*].program[*]",
-            "key"   => "description",
-            "value" => "description"  
-        ],
-        // [
-        //   "path"  => "category[*].program[*].videos[*]",
-        //     "key"   => "urls.app_iphone",
-        //     "value" => "data.iphone" 
-        // ]
+          "path"  => "category[*].program[*].videos[*]",
+          "child" => [
+          				[
+				            "key"   => "urls.app_iphone",
+				            "value" => "data.iphone"  
+          				]
+         			 ]
+        ]
     ];
 
 
@@ -45,7 +54,7 @@ function extract_data($record,$string) {
     return $current_data;
 } 
 
-    function node($paths,$id,$j,$input,$template,$output)
+    function node($paths,$id,$j,$input,$_input,$template,$output)
     {
       // foreach ($paths as $path) {
 
@@ -58,90 +67,100 @@ function extract_data($record,$string) {
 		}else
 			$path = $node["path"];
 
-
-		$akey = explode(".",$node["key"]);
-		$key  = '["'.implode('"]["',$akey).'"]';
-
-
-
-		$avalue = explode(".",$node["value"]);
-		$value  = '["'.implode('"]["',$avalue).'"]';
-		 if($id > 0)
-			$value  = '["'.implode('"]["',$avalue).'"][]';
-			
-
-		$store = new JsonStore();
-		$inputs = $store->get($input, "$.".$path);
-
-		$tpath = count($paths)-1;
-
-
-
-		// if($node["key"] === "description")
-		// {
-			print_r($input);
-			echo $path."\n";
-			echo $j."\n";
-			echo "-----\n";
-		// }
-
-		if($id < $tpath)
-			$id++;
-
-
-
-
-		foreach ($inputs as $i => $record) {
-
-
-			if (!@array_key_exists($i, $output) and $j == 0)
-			 	$output[$i] = $template;
-			    
-
-
-				$return = extract_data($record,$akey);
-
 				
-				if(!empty($return))
-				{	
-					
-					$isset = @extract_data($output[$i],$avalue);
+			$store = new JsonStore();
+			$inputs = $store->get($input, "$.".$path);
+
+			$tpath = count($paths)-1;
+
+
+			if($id < $tpath)
+				$id++;
+
+
+
+
+			foreach ($inputs as $i => $record) {
+
+
+				if (!@array_key_exists($i, $output) and $j == 0)
+				 	$output[$i] = $template;
+				    
+
+
+					foreach ($node["child"] as $child) {
+
+
+						$akey = explode(".",$child["key"]);
+						$key  = '["'.implode('"]["',$akey).'"]';
+
+						$return = extract_data($record,$akey);
+
+						$avalue = explode(".",$child["value"]);
+						// $value  = '["'.implode('"]["',$avalue).'"]';
+						//  if($id > 0)
+							$value  = '["'.implode('"]["',$avalue).'"][]';
+
+
+						if(!empty($return))
+						{	
+							
+							//$isset = @extract_data($output[$i],$avalue);
+						
+							
+								if($j == 0)
+									eval("\$output[$i]$value = \"$return\";");	
+								else
+									eval("\$output[$j]$value = \"$return\";");
+
+						}
+					}
+					$output = node($paths,$id,$i,$record,$inputs,$template,$output);
 				
-					//echo $isset."\n";
-					//print_r($isset);
-					
-
-
-					if($j == 0)
-						eval("\$output[$i]$value = \"$return\";");	
-					else
-						eval("\$output[$j]$value = \"$return\";");
-
-
 				}
-
-			    $output = node($paths,$id,$i,$record,$template,$output);
-
-		}
-
-
-
 
          return $output;
 
-      // }
+
     }
 
 
 
 
-    $nodes = node($paths,0,0,$input,$template,$output=[]);
+    $nodes = node($paths,0,0,$input,$input,$template,$output=[]);
 
 
+	// Recursively traverses a multi-dimensional array.
+	function fix_keys($array) {
+	    $numberCheck = false;
+	    foreach ($array as $k => $val) {
+
+	    	// echo count($val)."\n";
+	    	// print_r($val); 
+	    	// echo "key =".$k."\n";
+	    	// echo "\n\n\n\n";
+
+	    	if(!is_numeric($k) and is_array($val) and array_key_exists(0, $val))
+	    	{
+	    		//$numberCheck = array("k" => $k,"v"=>$val);
+	    		//print_r($val);
+	        	$array[$k] = $val[0];
+	        	//return $array;
+	    	}
+
+	        if (is_array($val) and count($val) > 1) $array[$k] = fix_keys($val); //recurse
+
+	    }
 
 
-    //print_r($nodes);
+	    return $array;
+	}
 
+    //echo json_encode($nodes);
+	$fixed = fix_keys($nodes);
+	print_r($nodes);
+    //print_r($fixed);
+    //echo json_encode($fixed);
     
 
 
