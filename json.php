@@ -18,10 +18,7 @@ require("jsonpath/JsonStore.php");
 				            "key"   => "nameprog",
 				            "value" => "title"  
           				],
-          				[
-				            "key"   => "description",
-				            "value" => "description"  
-          				]
+          		//
          			 ]
 
         ],
@@ -32,6 +29,10 @@ require("jsonpath/JsonStore.php");
           				[
 				            "key"   => "urls.app_iphone",
 				            "value" => "data.iphone"  
+          				],
+          				[
+				            "key"   => "urls.app_ipad",
+				            "value" => "data.ipad"  
           				]
          			 ]
         ]
@@ -157,7 +158,7 @@ function extract_data($record,$string) {
 	}
 
     //echo json_encode($nodes);
-	$fixed = fix_keys($nodes);
+	//$fixed = fix_keys($nodes);
 	print_r($nodes);
     //print_r($fixed);
     //echo json_encode($fixed);
