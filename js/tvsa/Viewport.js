@@ -17,8 +17,8 @@ Ext.define('TVSA.Viewport', {
             width       : 350,
             listeners : {
                 'itemclick' : function(_me, record, item, index, e ){
-
-                    label_tree1.setText(record.get("id"));
+                    if(record.raw.leaf)
+                        label_tree1.setText(record.get("id"));
                 }
             }
         });
@@ -36,7 +36,8 @@ Ext.define('TVSA.Viewport', {
             listeners : {
                 'itemclick' : function(_me, record, item, index, e ){
 
-                    label_tree2.setText(record.get("id"));
+                    if(record.raw.leaf)
+                        label_tree2.setText(record.get("id"));
                 }
             }
         });

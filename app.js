@@ -74,7 +74,7 @@ Ext.application({
                     grid    = Ext.getCmp('tvsagrid'),
                     store   = grid.store;
 
-                    return getJsonOfStore(store);
+                    return base64_encode(getJsonOfStore(store));
 
             },
             create   : function(){
