@@ -1,12 +1,2 @@
-{
-	"title":null,
-	"data": {
-		"title" : null,
-		"iphone" : null,
-		"ipad":null
-	},
-	"description":null,
-	"video":null
 
-
-}
+({"title":{"@cdata":null},"link":null,"description":{"@cdata":null},"pubDate":null,"pubDateTime":null,"media:content":{"@attributes":{"url":null,"fileSize":null,"type":null,"medium":null,"expression":null,"duration":null}},"media:title":{"@cdata":null,"@attributes":{"type":null}},"media:credit":{"@cdata":null,"@attributes":{"role":null,"scheme":null}},"media:description":{"@cdata":null,"@attributes":{"type":null}},"media:group":{"media:content":{"@attributes":{"url":null,"medium":null,"height":null,"width":null}}},"media:keywords":{"@cdata":null},"media:thumbnail":{"@attributes":{"url":null}},"media:text":null,"guid":{"@value":null,"@attributes":{"isPermaLink":null}},"category":{"@cdata":null},"categoryid":null,"comments":null})

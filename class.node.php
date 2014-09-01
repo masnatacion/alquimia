@@ -276,13 +276,23 @@ class Node
 */
 
 $paths = [
-	["feed1"=>"tree.category[*].program[*].videos[*].urls.app_iphone","feed2"=>"tree.data.iphone"],
-	["feed1"=>"tree.category[*].program[*].nameprog","feed2"=>"tree.title"],
+			["feed1"=>"tree.category[*].program[*].imagelogo","feed2"=>"tree.media:thumbnail"],
+			 ["feed1"=>"tree.link","feed2"=>"tree.link"],
+			 ["feed1"=>"tree.name","feed2"=>"tree.title"]
+		];
+
+
+$input = "http://middleware.estrategasdigitales.net/nucleo/feed_service_content?url=aHR0cDovL2ZlZWRzLmVzbWFzLmNvbS9kYXRhLWZlZWRzLWVzbWFzL2lwYWQvZGVwb3J0ZXMuanM%3D";
+$template = "http://middleware.estrategasdigitales.net/nucleo/feed_service_specific?url=aHR0cDovL2ZlZWRzLmVzbWFzLmNvbS9kYXRhLWZlZWRzLWVzbWFzL2lwYWQvMDEyOTI0MDEwMS54bWw=";
+
+// $paths = [
+// 	["feed1"=>"tree.category[*].program[*].videos[*].urls.app_iphone","feed2"=>"tree.data.iphone"],
+// 	["feed1"=>"tree.category[*].program[*].nameprog","feed2"=>"tree.title"],
 	
-	["feed1"=>"tree.category[*].program[*].description","feed2"=>"tree.description"],
-	["feed1"=>"tree.category[*].program[*].videos[*].urls.app_ipad","feed2"=>"tree.data.ipad"],
-];
-$node = new Node(["input" => "data.js", "template" => "template.js", "paths" =>$paths]);
+// 	["feed1"=>"tree.category[*].program[*].description","feed2"=>"tree.description"],
+// 	["feed1"=>"tree.category[*].program[*].videos[*].urls.app_ipad","feed2"=>"tree.data.ipad"],
+// ];
+$node = new Node(["input" => $input, "template" => $template, "paths" =>$paths]);
 
 print_r($node->getData());
 
