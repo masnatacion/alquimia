@@ -81,16 +81,21 @@ Ext.define('TVSA.Viewport', {
                     Ext.Msg.alert('Advertencia', 'Seleciona un nodo del FEED.');
                 }else
                 {
-                    var feed1 = node_tree1[0].data.id;
-                    var feed2 = node_tree2[0].data.id;
-                    var id = node_tree1[0].data.id+"="+node_tree2[0].data.id;
+                    var feed1 = node_tree1[0].raw;
+                    var feed2 = node_tree2[0].raw;
+                    var id = feed1.id+"="+feed2.id;
 
-                    if(!grid.store.findRecord("id",id) && !grid.store.findRecord("feed1",feed1) && !grid.store.findRecord("feed2",feed2))
+
+                    if(!feed1.leaf || !feed2.leaf)
+                    {
+                        Ext.Msg.alert('Advertencia', 'No puede hacer una relación con un directorio.<br> Selecione un nodo en ambos arboles.');
+
+                    }else if(!grid.store.findRecord("id",id) && !grid.store.findRecord("feed1",feed1.id) && !grid.store.findRecord("feed2",feed2.id))
                     {
                         grid.store.insert(0,{
                             id    : id,
-                            feed1 : node_tree1[0].data.id,
-                            feed2 : node_tree2[0].data.id
+                            feed1 : feed1.id,
+                            feed2 : feed2.id
                         });
 
                         if(Ext.isDefined(TVSA._inputHidden))

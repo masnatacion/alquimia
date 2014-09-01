@@ -277,8 +277,8 @@ class Node
 
 $paths = [
 			["feed1"=>"tree.category[*].program[*].imagelogo","feed2"=>"tree.media:thumbnail"],
-			 ["feed1"=>"tree.link","feed2"=>"tree.link"],
-			 ["feed1"=>"tree.name","feed2"=>"tree.title"]
+			["feed1"=>"tree.category[*].link","feed2"=>"tree.link"],
+			["feed1"=>"tree.category[*].name","feed2"=>"tree.title"]
 		];
 
 
