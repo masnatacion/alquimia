@@ -54,7 +54,7 @@ class Node
 
 	private function _decodeDataURL($url)
 	{
-		return json_decode(file_get_contents($url),true);
+		return (json_decode(file_get_contents($url),true));
 	}
 
 	private function _decodeDataURLS()
@@ -75,7 +75,7 @@ class Node
 	private function _setChild($array) {
 	    $return = array();
 	    foreach($array as $val) 
-	    	$return[] = [ "path"=>$val[0]["path"],"order"=>count($val[0]["path"]), "child" => $val ];
+	    	$return[] = [ "path"=>$val[0]["path"],"order"=>strlen($val[0]["path"]), "child" => $val ];
 	    
 	    return $return;
 	}
@@ -174,7 +174,7 @@ class Node
 	        	//return $array;
 	    	}
 
-	        if (is_array($val) and count($val) > 1) $array[$k] = fix_keys($val); //recurse
+	        if (is_array($val) and count($val) > 1) $array[$k] = $this->_fixkeys($val); //recurse
 
 	    }
 
@@ -182,7 +182,7 @@ class Node
 	    return $array;
 	}
 
-    private function _do($paths,$id,$j,$input,$_input,$template,$output)
+    private function _do($paths,$id,$j,$input,$_input,$template,$output,$pathParent = null)
     {
       // foreach ($paths as $path) {
 
@@ -190,13 +190,30 @@ class Node
 
 		if($id > 0)
 		{
-			$apath = explode(".",$node["path"]);
-			$path  = $apath[count($apath)-1];
-		}else
-			$path = $node["path"];
 
-				
+			
+			//$apath = explode(".",$node["path"]);
+			$apath = explode($pathParent.".",$node["path"]);
+			$path  = $apath[count($apath)-1];
+
+			//$pathParent = $path;
+			// echo $pathParent."\n";
+			// echo $node["path"]."\n";
+			// echo $path."\n";
+			// echo "\n\n";
+			//$pathParent = $path;
+
+		}else
+		{
+			$path = $node["path"];
+			$pathParent = $path;
+		}
+			
+			
+			
+
 			$store = $this->STORE;
+
 			$inputs = $store->get($input, "$.".$path);
 
 			$tpath = count($paths)-1;
@@ -226,22 +243,21 @@ class Node
 
 						$avalue = explode(".",$child["value"]);
 						// $value  = '["'.implode('"]["',$avalue).'"]';
-						//  if($id > 0)
-							$value  = '["'.implode('"]["',$avalue).'"][]';
+						//   if($id > 0)
+						 	$value  = '["'.implode('"]["',$avalue).'"][]';
 
 
 						if(!empty($return))
 						{	
-							
-							
-								if($j == 0)
-									eval("\$output[$i]$value = \"$return\";");	
-								else
-									eval("\$output[$j]$value = \"$return\";");
+
+							if($j == 0)
+								eval("\$output[$i]$value = \"$return\";");	
+							else
+								eval("\$output[$j]$value = \"$return\";");
 
 						}
 					}
-					$output = $this->_do($paths,$id,$i,$record,$inputs,$template,$output);
+					$output = $this->_do($paths,$id,$i,$record,$inputs,$template,$output,$pathParent);
 				
 				}
 
@@ -250,10 +266,110 @@ class Node
 
     }
 
+
+	private function _toXML($writer,$nodes,$parentKey,&$i = 0)
+	{
+
+		foreach ($nodes as $nKey => $nValue) {
+			 
+			 $key = $parentKey;
+			 $value = $nValue;
+
+
+			if(is_array($nValue) and count($nValue) > 0)
+			 {
+
+
+			 	if(array_key_exists("@cdata", $nValue))
+			 	{
+			 		
+					$writer->startElement($nKey);
+					$writer->writeCData($nValue["@cdata"][0]);
+					$writer->endElement();
+					
+
+			 	}elseif(array_key_exists("@attributes", $nValue)){
+
+
+
+			 			if(!array_key_exists(0, $nValue["@attributes"]))
+			 			{
+		 					$writer->startElement($nKey);
+		 					foreach ($nValue["@attributes"] as $katt => $vatt)
+		 					{
+								if(is_array($vatt) and count($vatt) == 1)
+		 							$vatt = $vatt[0];
+		 						$writer->writeAttribute($katt, $vatt); 
+		 					}
+		 
+		 					$writer->endElement();
+			 			}else
+			 			{
+				 			foreach ($nValue["@attributes"] as $katt => $vatt) {
+
+				 				$writer->startElement("media:group");
+
+				 				foreach ($vatt as $kvatt => $vvatt) {
+
+				 					$writer->startElement($nKey);
+				 					$writer->writeAttribute($katt, $vvatt); 
+				 					$writer->endElement();
+				 				}
+
+				 				$writer->endElement();
+				 			}
+			 			}
+
+			 	}else
+			 	{
+
+
+
+			 		if(!is_numeric($key) and $i > 0)
+				 		$writer->startElement($key); 
+
+
+				 	
+				 	// echo "\n----\n\n";
+				 	// print_r($nValue);
+				 	// print_r($nKey);
+				 	// echo "\n----\n\n";
+				 	$this->_toXML($writer,$nValue,$nKey);
+
+				 	if(!is_numeric($key) and $i > 0)	
+				 		$writer->endElement(); 
+
+				 	$i++;
+				 }
+
+			 }
+
+			 if(!is_array($nValue) and !is_array($key) and !empty($nValue))
+		 	 {
+		 	 	
+		 	 	// if(!array_key_exists("@cdata", $nValue))
+		 	 	// {
+					$writer->startElement($key); 
+					$writer->text($nValue); 
+					$writer->endElement(); 
+		 	 	// }
+
+				
+		 	 }
+
+
+				
+		}
+	}
+
     public function getData()
     {
     	$paths = $this->_getPaths();
     	
+    	// print_r($paths);
+    	// die;
+    	//array_shift($paths);
+
 
     	$input    = $this->_getINPUT();
     	$template = $this->_getTEMPLATE();
@@ -266,6 +382,30 @@ class Node
     	return $this->_fixkeys($this->getData());
     }
 
+
+    public function toXML()
+    {
+
+    	$nodes = $this->getData();
+
+		$writer = new XMLWriter();  
+		$writer->openURI('php://output');   
+		$writer->startDocument('1.0','UTF-8');   
+		$writer->setIndent(4); 
+
+		$writer->startElement('rss'); 
+		$writer->writeAttribute('version',"2.0"); 
+			$writer->startElement('channel'); 
+				$this->_toXML($writer,$nodes,"item");
+			$writer->endElement(); 
+
+		$writer->endElement(); 
+
+		$writer->endDocument(); 
+		$writer->flush();
+    }
+
+
 }
 
 
@@ -276,14 +416,26 @@ class Node
 */
 
 $paths = [
-			["feed1"=>"tree.category[*].program[*].imagelogo","feed2"=>"tree.media:thumbnail"],
-			["feed1"=>"tree.category[*].link","feed2"=>"tree.link"],
-			["feed1"=>"tree.category[*].name","feed2"=>"tree.title"]
+			["feed1"=>"tree.category[*].program[*].nameprog","feed2"=>"tree.title"],
+			["feed1"=>"tree.category[*].program[*].description","feed2"=>"tree.description"],
+			["feed1"=>"tree.category[*].program[*].videos[*].urls.app_iphone","feed2"=>"tree.data.iphone"]
 		];
 
 
-$input = "http://middleware.estrategasdigitales.net/nucleo/feed_service_content?url=aHR0cDovL2ZlZWRzLmVzbWFzLmNvbS9kYXRhLWZlZWRzLWVzbWFzL2lwYWQvZGVwb3J0ZXMuanM%3D";
-$template = "http://middleware.estrategasdigitales.net/nucleo/feed_service_specific?url=aHR0cDovL2ZlZWRzLmVzbWFzLmNvbS9kYXRhLWZlZWRzLWVzbWFzL2lwYWQvMDEyOTI0MDEwMS54bWw=";
+$base64 = "W3siaWQiOiJ0cmVlLmNhdGVnb3J5WypdLnByb2dyYW1bKl0udmlkZW9zWypdLnVybHMuYXBwX2lwYWQ9dHJlZS5tZWRpYTp0aHVtYm5haWwuQGF0dHJpYnV0ZXMudXJsIiwiZmVlZDEiOiJ0cmVlLmNhdGVnb3J5WypdLnByb2dyYW1bKl0udmlkZW9zWypdLnVybHMuYXBwX2lwYWQiLCJmZWVkMiI6InRyZWUubWVkaWE6dGh1bWJuYWlsLkBhdHRyaWJ1dGVzLnVybCJ9LHsiaWQiOiJ0cmVlLmNhdGVnb3J5WypdLnByb2dyYW1bKl0uZGVzY3JpcHRpb249dHJlZS5tZWRpYTpkZXNjcmlwdGlvbi5AY2RhdGEiLCJmZWVkMSI6InRyZWUuY2F0ZWdvcnlbKl0ucHJvZ3JhbVsqXS5kZXNjcmlwdGlvbiIsImZlZWQyIjoidHJlZS5tZWRpYTpkZXNjcmlwdGlvbi5AY2RhdGEifSx7ImlkIjoidHJlZS5jYXRlZ29yeVsqXS5wcm9ncmFtWypdLm5hbWVwcm9nPXRyZWUubWVkaWE6dGl0bGUuQGNkYXRhIiwiZmVlZDEiOiJ0cmVlLmNhdGVnb3J5WypdLnByb2dyYW1bKl0ubmFtZXByb2ciLCJmZWVkMiI6InRyZWUubWVkaWE6dGl0bGUuQGNkYXRhIn0seyJpZCI6InRyZWUuY2F0ZWdvcnlbKl0uZGVzY3JpcHRpb249dHJlZS5kZXNjcmlwdGlvbi5AY2RhdGEiLCJmZWVkMSI6InRyZWUuY2F0ZWdvcnlbKl0uZGVzY3JpcHRpb24iLCJmZWVkMiI6InRyZWUuZGVzY3JpcHRpb24uQGNkYXRhIn0seyJpZCI6InRyZWUuY2F0ZWdvcnlbKl0ubGluaz10cmVlLmxpbmsiLCJmZWVkMSI6InRyZWUuY2F0ZWdvcnlbKl0ubGluayIsImZlZWQyIjoidHJlZS5saW5rIn0seyJpZCI6InRyZWUuY2F0ZWdvcnlbKl0ubmFtZT10cmVlLnRpdGxlLkBjZGF0YSIsImZlZWQxIjoidHJlZS5jYXRlZ29yeVsqXS5uYW1lIiwiZmVlZDIiOiJ0cmVlLnRpdGxlLkBjZGF0YSJ9XQ==";
+
+$base64 = "W3siaWQiOiJ0cmVlLmNhdGVnb3J5WypdLnByb2dyYW1bKl0udmlkZW9zWypdLnR5cGU9dHJlZS5tZWRpYTpjb250ZW50LkBhdHRyaWJ1dGVzLnR5cGUiLCJmZWVkMSI6InRyZWUuY2F0ZWdvcnlbKl0ucHJvZ3JhbVsqXS52aWRlb3NbKl0udHlwZSIsImZlZWQyIjoidHJlZS5tZWRpYTpjb250ZW50LkBhdHRyaWJ1dGVzLnR5cGUifSx7ImlkIjoidHJlZS5jYXRlZ29yeVsqXS5wcm9ncmFtWypdLnZpZGVvc1sqXS5kdXJhdGlvbj10cmVlLm1lZGlhOmNvbnRlbnQuQGF0dHJpYnV0ZXMuZHVyYXRpb24iLCJmZWVkMSI6InRyZWUuY2F0ZWdvcnlbKl0ucHJvZ3JhbVsqXS52aWRlb3NbKl0uZHVyYXRpb24iLCJmZWVkMiI6InRyZWUubWVkaWE6Y29udGVudC5AYXR0cmlidXRlcy5kdXJhdGlvbiJ9LHsiaWQiOiJ0cmVlLmNhdGVnb3J5WypdLnByb2dyYW1bKl0udmlkZW9zWypdLnVybHMuYXBwX2lwYWQ9dHJlZS5tZWRpYTpjb250ZW50LkBhdHRyaWJ1dGVzLnVybCIsImZlZWQxIjoidHJlZS5jYXRlZ29yeVsqXS5wcm9ncmFtWypdLnZpZGVvc1sqXS51cmxzLmFwcF9pcGFkIiwiZmVlZDIiOiJ0cmVlLm1lZGlhOmNvbnRlbnQuQGF0dHJpYnV0ZXMudXJsIn0seyJpZCI6InRyZWUuY2F0ZWdvcnlbKl0uZGVzY3JpcHRpb249dHJlZS5kZXNjcmlwdGlvbi5AY2RhdGEiLCJmZWVkMSI6InRyZWUuY2F0ZWdvcnlbKl0uZGVzY3JpcHRpb24iLCJmZWVkMiI6InRyZWUuZGVzY3JpcHRpb24uQGNkYXRhIn0seyJpZCI6InRyZWUuY2F0ZWdvcnlbKl0ubGluaz10cmVlLmxpbmsiLCJmZWVkMSI6InRyZWUuY2F0ZWdvcnlbKl0ubGluayIsImZlZWQyIjoidHJlZS5saW5rIn0seyJpZCI6InRyZWUuY2F0ZWdvcnlbKl0ubmFtZT10cmVlLnRpdGxlLkBjZGF0YSIsImZlZWQxIjoidHJlZS5jYXRlZ29yeVsqXS5uYW1lIiwiZmVlZDIiOiJ0cmVlLnRpdGxlLkBjZGF0YSJ9XQ==";
+$paths = base64_decode($base64);
+$paths = json_decode($paths,true);
+
+
+ // print_r($paths);
+
+//$input = "http://middleware.estrategasdigitales.net/nucleo/feed_service_content?url=aHR0cDovL2ZlZWRzLmVzbWFzLmNvbS9kYXRhLWZlZWRzLWVzbWFzL2lwYWQvZGVwb3J0ZXMuanM%3D";
+//$template = "http://middleware.estrategasdigitales.net/nucleo/feed_service_specific?url=aHR0cDovL2ZlZWRzLmVzbWFzLmNvbS9kYXRhLWZlZWRzLWVzbWFzL2lwYWQvMDEyOTI0MDEwMS54bWw=";
+
+ $input = "./data.js";
+ $template = "./template.js";
 
 // $paths = [
 // 	["feed1"=>"tree.category[*].program[*].videos[*].urls.app_iphone","feed2"=>"tree.data.iphone"],
@@ -294,6 +446,20 @@ $template = "http://middleware.estrategasdigitales.net/nucleo/feed_service_speci
 // ];
 $node = new Node(["input" => $input, "template" => $template, "paths" =>$paths]);
 
-print_r($node->getData());
+$nodes = $node->toXML();
+//print_r($nodes);
+// echo json_encode($input);
+
+
+
+ 
+  
+
+
+
+
+  
+ 
+
 
 
