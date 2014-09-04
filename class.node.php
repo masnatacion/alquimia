@@ -54,7 +54,11 @@ class Node
 
 	private function _decodeDataURL($url)
 	{
-		return (json_decode(file_get_contents($url),true));
+		$file = file_get_contents($url);
+		$file = preg_replace('/^\(/','',$file);
+		$file = preg_replace('/\)$/','',$file);
+
+		return (json_decode($file,true));
 	}
 
 	private function _decodeDataURLS()
@@ -80,6 +84,16 @@ class Node
 	    return $return;
 	}
 
+	private function _searchKey( $needle_key, $array ) {
+	  foreach($array AS $key=>$value){
+	    if(substr_count($key, $needle_key)) return true;
+	    if(is_array($value)){
+	      if( ($result = $this->_searchKey($needle_key,$value)) !== false)
+	        return true;
+	    }
+	  }
+	  return false;
+	} 
 
 	private function _removeRoot($path)
 	{
@@ -383,18 +397,32 @@ class Node
     }
 
 
-    public function toXML()
+    public function toXML($file = "putillo.xml")
     {
+
+
+    	$template = $this->_getTEMPLATE();
 
     	$nodes = $this->getData();
 
 		$writer = new XMLWriter();  
-		$writer->openURI('php://output');   
+		$writer->openURI($file);   
 		$writer->startDocument('1.0','UTF-8');   
 		$writer->setIndent(4); 
 
 		$writer->startElement('rss'); 
 		$writer->writeAttribute('version',"2.0"); 
+
+    	if($this->_searchKey("media:content",$template))
+    		$writer->writeAttribute('xmlns:content',"http://purl.org/rss/1.0/modules/content/"); 
+
+    	if($this->_searchKey("media:",$template))
+    		$writer->writeAttribute('xmlns:media',"http://search.yahoo.com/mrss/"); 
+
+    	if($this->_searchKey("atom:link",$template))
+    		$writer->writeAttribute('xmlns:atom',"http://www.w3.org/2005/Atom"); 
+
+
 			$writer->startElement('channel'); 
 				$this->_toXML($writer,$nodes,"item");
 			$writer->endElement(); 
@@ -446,7 +474,7 @@ $paths = json_decode($paths,true);
 // ];
 $node = new Node(["input" => $input, "template" => $template, "paths" =>$paths]);
 
-$nodes = $node->toXML();
+$nodes = $node->toXML("putillo.xml");
 //print_r($nodes);
 // echo json_encode($input);
 
