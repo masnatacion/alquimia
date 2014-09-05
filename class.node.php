@@ -397,7 +397,7 @@ class Node
     }
 
 
-    public function toXML($file = "putillo.xml")
+    public function toRSS($file = "rss.xml")
     {
 
 
@@ -431,6 +431,42 @@ class Node
 
 		$writer->endDocument(); 
 		$writer->flush();
+    }
+
+
+    public function toXML($file = "xml.xml")
+    {
+
+
+    	$template = $this->_getTEMPLATE();
+
+    	$nodes = $this->getData();
+
+		$writer = new XMLWriter();  
+		$writer->openURI($file);   
+		$writer->startDocument('1.0','UTF-8');   
+		$writer->setIndent(4); 
+
+		$writer->startElement('xml'); 
+
+		$this->_toXML($writer,$nodes,"item");
+
+		$writer->endElement(); 
+
+		$writer->endDocument(); 
+		$writer->flush();
+    }
+
+
+    function toJSON($file = "json.json")
+    {
+    	$data = $this->getData();
+    	$json =json_encode($data);
+
+    	if($file !="json.json")
+    		file_put_contents($file, $json);
+    	else
+    		return $json;
     }
 
 
