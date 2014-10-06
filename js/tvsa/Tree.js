@@ -9,7 +9,7 @@ Ext.define('TVSA.Tree', {
         emptyText :"No hay resultados de b&uacute;squeda",
         stripeRows: true
     },
-
+    node : {},
     initComponent: function (){
         
         var me = this;
@@ -35,7 +35,7 @@ Ext.define('TVSA.Tree', {
         data : [],
         node : function (store,json,isRoot,idNode,newNode)
         {
-            var me = this;
+            var _me = this;
 
             Ext.iterate(json, function(key, value) {
                 // console.log(key)
@@ -53,17 +53,22 @@ Ext.define('TVSA.Tree', {
                     // var node = store.getNodeById(idNode);
                     var expanded = isRoot;
 
-                    var child = newNode.appendChild({
+                    if(Ext.isObject(key))
+                        _me.node(store,key,false,id,newNode);
+
+
+                    var child = newNode.appendChild(Ext.apply(me.node,{
                         //expanded :expanded,
+
                         leaf: Ext.isObject(value) ? false : !Ext.isArray(value),
                         id   : id,
                         text : key
-                    },true);
+                    }),true);
 
 
 
                     if(Ext.isObject(value))
-                        me.node(store,value,false,id,child);
+                        _me.node(store,value,false,id,child);
 
                     if(Ext.isArray(value)){
 
@@ -77,7 +82,7 @@ Ext.define('TVSA.Tree', {
                             // console.log(key);
                             // console.log(idNode)
                             if(Ext.isObject(key))
-                                me.node(store,key,false,id,child);
+                                _me.node(store,key,false,id,child);
 
                
                         });
@@ -101,6 +106,20 @@ Ext.define('TVSA.Tree', {
         if(!record.raw.leaf)
         return false;
     });
+
+    // added 
+    me.on("checkchange", function( node, checked, eOpts ){
+        if(node.hasChildNodes()){
+            node.eachChild(function(childNode){
+
+                if(childNode.data.leaf)
+                    childNode.set('checked', checked);
+            });
+        }
+
+        TVSA.standar.save(TVSA.standar.hiddenInput);
+    });
+    
 
 
     },
@@ -126,6 +145,9 @@ Ext.define('TVSA.Tree', {
 
             var node = me.store.getRootNode();
             var Tree = me.Tree;
+
+            if(json.length > 1)
+                json = json[0];
 
             Tree.node(me.store,json,true,"tree",node);
 
