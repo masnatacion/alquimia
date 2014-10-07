@@ -45,6 +45,8 @@ Ext.define('TVSA.Tree', {
                     id+="."+key;
                 else if(Ext.isArray(value))
                     id+="."+key+"[*]";
+                else if(  Ext.isObject( key ) )
+                    id+="[*]";
                 else
                     id+="."+key;
                     //console.log(id)
@@ -56,14 +58,16 @@ Ext.define('TVSA.Tree', {
                     if(Ext.isObject(key))
                         _me.node(store,key,false,id,newNode);
 
+                    else{
+                        var child = newNode.appendChild(Ext.apply(me.node,{
+                            //expanded :expanded,
 
-                    var child = newNode.appendChild(Ext.apply(me.node,{
-                        //expanded :expanded,
+                            leaf: Ext.isObject(value) ? false : !Ext.isArray(value),
+                            id   : id,
+                            text : key
+                        }),true);
+                    }
 
-                        leaf: Ext.isObject(value) ? false : !Ext.isArray(value),
-                        id   : id,
-                        text : key
-                    }),true);
 
 
 
