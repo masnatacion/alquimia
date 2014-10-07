@@ -5,7 +5,6 @@ Ext.application({
     launch: function() {
         var me = this;
 
-        console.log(1)
 
          function getJsonOfStore(store){
                 var datar = new Array();
@@ -29,33 +28,42 @@ Ext.application({
             },
             resetTemplate : function(){
                 var me       = this,
-                    tree     = Ext.getCmp('tvsatemplate'),
-                    store    = tree.store,
-                    childrens = store.getRootNode().childNodes;
+                    tree     = Ext.getCmp('tvsatemplate');
 
-                    if(childrens.length > 0)
-                        store.getRootNode().collapse();
+                    if(tree)
+                    {
+                        var store    = tree.store,
+                        childrens = store.getRootNode().childNodes;
 
-                    store.getRootNode().removeAll();
+                        if(childrens.length > 0)
+                            store.getRootNode().collapse();
+
+                        store.getRootNode().removeAll();
+                    }
 
             },
             resetFeed    : function(){
                 var me       = this,
-                    tree     = Ext.getCmp('tvsafeed'),
-                    store    = tree.store,
-                    childrens = store.getRootNode().childNodes;
+                    tree     = Ext.getCmp('tvsafeed');
 
-                    if(childrens.length > 0)
-                        store.getRootNode().collapse();
+                    if(tree)
+                    {
+                        var store    = tree.store,
+                        childrens = store.getRootNode().childNodes;
 
-                    store.getRootNode().removeAll();
+                        if(childrens.length > 0)
+                            store.getRootNode().collapse();
+
+                        store.getRootNode().removeAll();
+                    }
+
             },
             resetGrid    : function(){
                 var me      = this,
-                    grid    = Ext.getCmp('tvsagrid'),
-                    store   = grid.store;
+                    grid    = Ext.getCmp('tvsagrid');
 
-                    store.removeAll();
+                    if(grid)
+                        grid.store.removeAll();
 
             },
             save     : function(){
@@ -96,9 +104,10 @@ Ext.application({
                     if(me.show.arguments.length > 0)
                         var id = me.show.arguments[0];
 
-                if(!me._view)
+                if(me._view)
+                   me._view.destroy();
+                
                     me.create({renderTo:id});
-                else
                     me._view.show();
 
 
@@ -111,9 +120,9 @@ Ext.application({
                     me._view.hide();
 
             },
-        	setFeed : function(url){
+            setFeed : function(url){
                 var me       = this,
-        		    tvsafeed = Ext.getCmp('tvsafeed');
+                    tvsafeed = Ext.getCmp('tvsafeed');
 
                 me.resetFeed();    
                 
@@ -121,7 +130,7 @@ Ext.application({
                     tvsafeed.loadData(url);
                 }, 500);
                 
-        	},
+            },
             setTemplate : function(url){
                 var me       = this,
                     tvsafeed = Ext.getCmp('tvsatemplate');
@@ -135,8 +144,8 @@ Ext.application({
         };
 
         TVSA.standar = {
-            id            : "tvsastandar",
-            hiddenInput   : "hidden",
+            id            : "tvsatreestandar",
+            hiddenInput   : "tree_json",
             save     : function(id){
                 var me          = this;
 
@@ -159,30 +168,30 @@ Ext.application({
                 return (Ext.encode(records));
 
             },
-            show    : function(){
+            show    : function(id){
                 var me   = this;
                 var tree = Ext.getCmp(me.id);
 
-                if(!tree)
-                    me.create();
-                else
-                    tree.show();
+                if(tree)
+                    tree.destroy();
+
+                me.create(id);
+
 
 
             },
-            create : function(){
+            create : function(id){
 
                 var me = this;
 
                 return Ext.create("TVSA.Tree",{
-                    
-                    renderTo    : 'tree',
                     id          : me.id,
+                    renderTo    : id,
                     title       : 'TEMPLATE FEED',
                     collapsible : true,
                     split       : true,
                     width       : 350,
-                    url         : './data.js',
+                    //url         : './data.js',
                     node        : {checked :false}
                 });
             },
@@ -206,14 +215,19 @@ Ext.application({
             },
             reset   : function(){
                 var me       = this,
-                    tree     = Ext.getCmp(me.id),
-                    store    = tree.store,
-                    childrens = store.getRootNode().childNodes;
+                    tree     = Ext.getCmp(me.id);
 
-                    if(childrens.length > 0)
-                        store.getRootNode().collapse();
+                    if(tree)
+                    {
+                        var store    = tree.store,
+                        childrens = store.getRootNode().childNodes;
 
-                    store.getRootNode().removeAll();
+                        if(childrens.length > 0)
+                            store.getRootNode().collapse();
+
+                        store.getRootNode().removeAll();
+                    }
+
             }
         }
 
