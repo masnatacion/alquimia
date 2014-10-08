@@ -107,7 +107,7 @@ Ext.define('TVSA.Tree', {
 
 
     me.on("beforeselect",function(_me, record, index, eOpts){
-        if(!record.raw.leaf)
+        if(!record.data.leaf)
         return false;
     });
 

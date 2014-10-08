@@ -7,7 +7,7 @@ Ext.define('TVSA.Viewport', {
         
         var me = this;
 
-        var tree1 = Ext.create("TVSA.Tree",{
+        tree1 = Ext.create("TVSA.Tree",{
             region      : 'west',
             id          : 'tvsafeed',
             //url         : './data.js',
@@ -17,7 +17,8 @@ Ext.define('TVSA.Viewport', {
             width       : 350,
             listeners : {
                 'itemclick' : function(_me, record, item, index, e ){
-                    if(record.raw.leaf)
+                    console.log(record.data)
+                    if(record.data.leaf)
                         label_tree1.setText(record.get("id"));
                 }
             }
@@ -25,7 +26,7 @@ Ext.define('TVSA.Viewport', {
 
 
 
-        var tree2 = Ext.create("TVSA.Tree",{
+        tree2 = Ext.create("TVSA.Tree",{
             region      : 'east',
             id          : 'tvsatemplate',
             title       : 'TEMPLATE FEED',
@@ -36,7 +37,7 @@ Ext.define('TVSA.Viewport', {
             listeners : {
                 'itemclick' : function(_me, record, item, index, e ){
 
-                    if(record.raw.leaf)
+                    if(record.data.leaf)
                         label_tree2.setText(record.get("id"));
                 }
             }
@@ -82,8 +83,8 @@ Ext.define('TVSA.Viewport', {
                     Ext.Msg.alert('Advertencia', 'Seleciona un nodo del FEED.');
                 }else
                 {
-                    var feed1 = node_tree1[0].raw;
-                    var feed2 = node_tree2[0].raw;
+                    var feed1 = node_tree1[0].data;
+                    var feed2 = node_tree2[0].data;
                     var id = feed1.id+"="+feed2.id;
 
 
