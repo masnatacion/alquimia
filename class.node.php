@@ -98,7 +98,7 @@ class Node
 
 	private function _removeRoot($path)
 	{
-		return preg_replace('/^tree./', '', $path);
+		return preg_replace('/^(tree\[\*\]|tree)./', '', $path);
 	}
 
 	private function _generatePath($path)
@@ -157,16 +157,37 @@ class Node
 
 	private function _extractData($record,$string) {
 
-	    $current_data = $record;
+	    $current_data = [];
+
+
+	    if(is_string($record))
+	    	return $record;
 
 	    foreach ($string as $name) {
 
-	            if (key_exists($name, $current_data)) {
-	                    $current_data = $current_data[$name];
-	            } else {
-	                    return null;
-	            }
+	    		if(is_array($record))
+	    		{
+		    		foreach ($record as $data) {
+			            if (key_exists($name, $current_data)) {
+			                    $current_data[] = $current_data[$name];
+			            } 
+		    		}
+
+
+	    		}else
+	    		{
+
+		            if (key_exists($name, $record)) {
+		                    $current_data = $record[$name];
+		            } else {
+
+		            }
+	    		}
+
+
+
 	    }
+
 
 	    return $current_data;
 	} 
@@ -203,6 +224,7 @@ class Node
 
 		$node = $paths[$id];
 
+
 		if($id > 0)
 		{
 
@@ -223,12 +245,9 @@ class Node
 			$path = $node["path"];
 			$pathParent = $path;
 		}
-			
-			
-			
+
 
 			$store = $this->STORE;
-
 			$inputs = $store->get($input, "$.".$path);
 
 			$tpath = count($paths)-1;
@@ -239,7 +258,6 @@ class Node
 
 
 
-
 			foreach ($inputs as $i => $record) {
 
 
@@ -247,14 +265,15 @@ class Node
 				 	$output[$i] = $template;
 				    
 
-
 					foreach ($node["child"] as $child) {
 
 
 						$akey = explode(".",$child["key"]);
 						$key  = '["'.implode('"]["',$akey).'"]';
 
+						
 						$return = $this->_extractData($record,$akey);
+						
 
 						$avalue = explode(".",$child["value"]);
 						// $value  = '["'.implode('"]["',$avalue).'"]';
@@ -490,11 +509,12 @@ $paths = [
 //$base64 = "W3siaWQiOiJ0cmVlLmNhdGVnb3J5WypdLnByb2dyYW1bKl0udmlkZW9zWypdLnVybHMuYXBwX2lwYWQ9dHJlZS5tZWRpYTp0aHVtYm5haWwuQGF0dHJpYnV0ZXMudXJsIiwiZmVlZDEiOiJ0cmVlLmNhdGVnb3J5WypdLnByb2dyYW1bKl0udmlkZW9zWypdLnVybHMuYXBwX2lwYWQiLCJmZWVkMiI6InRyZWUubWVkaWE6dGh1bWJuYWlsLkBhdHRyaWJ1dGVzLnVybCJ9LHsiaWQiOiJ0cmVlLmNhdGVnb3J5WypdLnByb2dyYW1bKl0uZGVzY3JpcHRpb249dHJlZS5tZWRpYTpkZXNjcmlwdGlvbi5AY2RhdGEiLCJmZWVkMSI6InRyZWUuY2F0ZWdvcnlbKl0ucHJvZ3JhbVsqXS5kZXNjcmlwdGlvbiIsImZlZWQyIjoidHJlZS5tZWRpYTpkZXNjcmlwdGlvbi5AY2RhdGEifSx7ImlkIjoidHJlZS5jYXRlZ29yeVsqXS5wcm9ncmFtWypdLm5hbWVwcm9nPXRyZWUubWVkaWE6dGl0bGUuQGNkYXRhIiwiZmVlZDEiOiJ0cmVlLmNhdGVnb3J5WypdLnByb2dyYW1bKl0ubmFtZXByb2ciLCJmZWVkMiI6InRyZWUubWVkaWE6dGl0bGUuQGNkYXRhIn0seyJpZCI6InRyZWUuY2F0ZWdvcnlbKl0uZGVzY3JpcHRpb249dHJlZS5kZXNjcmlwdGlvbi5AY2RhdGEiLCJmZWVkMSI6InRyZWUuY2F0ZWdvcnlbKl0uZGVzY3JpcHRpb24iLCJmZWVkMiI6InRyZWUuZGVzY3JpcHRpb24uQGNkYXRhIn0seyJpZCI6InRyZWUuY2F0ZWdvcnlbKl0ubGluaz10cmVlLmxpbmsiLCJmZWVkMSI6InRyZWUuY2F0ZWdvcnlbKl0ubGluayIsImZlZWQyIjoidHJlZS5saW5rIn0seyJpZCI6InRyZWUuY2F0ZWdvcnlbKl0ubmFtZT10cmVlLnRpdGxlLkBjZGF0YSIsImZlZWQxIjoidHJlZS5jYXRlZ29yeVsqXS5uYW1lIiwiZmVlZDIiOiJ0cmVlLnRpdGxlLkBjZGF0YSJ9XQ==";
 
 //$base64 = "W3siaWQiOiJ0cmVlLmNhdGVnb3J5WypdLnByb2dyYW1bKl0udmlkZW9zWypdLnR5cGU9dHJlZS5tZWRpYTpjb250ZW50LkBhdHRyaWJ1dGVzLnR5cGUiLCJmZWVkMSI6InRyZWUuY2F0ZWdvcnlbKl0ucHJvZ3JhbVsqXS52aWRlb3NbKl0udHlwZSIsImZlZWQyIjoidHJlZS5tZWRpYTpjb250ZW50LkBhdHRyaWJ1dGVzLnR5cGUifSx7ImlkIjoidHJlZS5jYXRlZ29yeVsqXS5wcm9ncmFtWypdLnZpZGVvc1sqXS5kdXJhdGlvbj10cmVlLm1lZGlhOmNvbnRlbnQuQGF0dHJpYnV0ZXMuZHVyYXRpb24iLCJmZWVkMSI6InRyZWUuY2F0ZWdvcnlbKl0ucHJvZ3JhbVsqXS52aWRlb3NbKl0uZHVyYXRpb24iLCJmZWVkMiI6InRyZWUubWVkaWE6Y29udGVudC5AYXR0cmlidXRlcy5kdXJhdGlvbiJ9LHsiaWQiOiJ0cmVlLmNhdGVnb3J5WypdLnByb2dyYW1bKl0udmlkZW9zWypdLnVybHMuYXBwX2lwYWQ9dHJlZS5tZWRpYTpjb250ZW50LkBhdHRyaWJ1dGVzLnVybCIsImZlZWQxIjoidHJlZS5jYXRlZ29yeVsqXS5wcm9ncmFtWypdLnZpZGVvc1sqXS51cmxzLmFwcF9pcGFkIiwiZmVlZDIiOiJ0cmVlLm1lZGlhOmNvbnRlbnQuQGF0dHJpYnV0ZXMudXJsIn0seyJpZCI6InRyZWUuY2F0ZWdvcnlbKl0uZGVzY3JpcHRpb249dHJlZS5kZXNjcmlwdGlvbi5AY2RhdGEiLCJmZWVkMSI6InRyZWUuY2F0ZWdvcnlbKl0uZGVzY3JpcHRpb24iLCJmZWVkMiI6InRyZWUuZGVzY3JpcHRpb24uQGNkYXRhIn0seyJpZCI6InRyZWUuY2F0ZWdvcnlbKl0ubGluaz10cmVlLmxpbmsiLCJmZWVkMSI6InRyZWUuY2F0ZWdvcnlbKl0ubGluayIsImZlZWQyIjoidHJlZS5saW5rIn0seyJpZCI6InRyZWUuY2F0ZWdvcnlbKl0ubmFtZT10cmVlLnRpdGxlLkBjZGF0YSIsImZlZWQxIjoidHJlZS5jYXRlZ29yeVsqXS5uYW1lIiwiZmVlZDIiOiJ0cmVlLnRpdGxlLkBjZGF0YSJ9XQ==";
-// $paths = base64_decode($base64);
-// $paths = json_decode($paths,true);
+
+$base64  = "W3siaWQiOiJ0cmVlWypdLnBob3RvWypdLmltYWdlc1sqXS4xMDI0eDc2OD10cmVlLnJlc291cmNlc1sqXS5yZXNvdXJjZVsqXS5hdHRyaWJ1dGVzWypdLmltYWdlX2Fzc2V0c1sqXS5pbWFnZV9hc3NldFsqXS51cmwiLCJmZWVkMSI6InRyZWVbKl0ucGhvdG9bKl0uaW1hZ2VzWypdLjEwMjR4NzY4IiwiZmVlZDIiOiJ0cmVlLnJlc291cmNlc1sqXS5yZXNvdXJjZVsqXS5hdHRyaWJ1dGVzWypdLmltYWdlX2Fzc2V0c1sqXS5pbWFnZV9hc3NldFsqXS51cmwifSx7ImlkIjoidHJlZVsqXS50eXBlRWxlbWVudD10cmVlLnJlc291cmNlc1sqXS5yZXNvdXJjZVsqXS50eXBlIiwiZmVlZDEiOiJ0cmVlWypdLnR5cGVFbGVtZW50IiwiZmVlZDIiOiJ0cmVlLnJlc291cmNlc1sqXS5yZXNvdXJjZVsqXS50eXBlIn0seyJpZCI6InRyZWVbKl0ucHViRGF0ZT10cmVlLnJlc291cmNlc1sqXS5yZXNvdXJjZVsqXS5hdHRyaWJ1dGVzWypdLnB1YkRhdGUiLCJmZWVkMSI6InRyZWVbKl0ucHViRGF0ZSIsImZlZWQyIjoidHJlZS5yZXNvdXJjZXNbKl0ucmVzb3VyY2VbKl0uYXR0cmlidXRlc1sqXS5wdWJEYXRlIn0seyJpZCI6InRyZWVbKl0uZGVzY3JpcHRpb249dHJlZS5yZXNvdXJjZXNbKl0ucmVzb3VyY2VbKl0uYXR0cmlidXRlc1sqXS5kZXNjcmlwdGlvblsqXS5AY2RhdGEiLCJmZWVkMSI6InRyZWVbKl0uZGVzY3JpcHRpb24iLCJmZWVkMiI6InRyZWUucmVzb3VyY2VzWypdLnJlc291cmNlWypdLmF0dHJpYnV0ZXNbKl0uZGVzY3JpcHRpb25bKl0uQGNkYXRhIn0seyJpZCI6InRyZWVbKl0udGl0bGU9dHJlZS5yZXNvdXJjZXNbKl0ucmVzb3VyY2VbKl0uYXR0cmlidXRlc1sqXS50aXRsZVsqXS5AY2RhdGEiLCJmZWVkMSI6InRyZWVbKl0udGl0bGUiLCJmZWVkMiI6InRyZWUucmVzb3VyY2VzWypdLnJlc291cmNlWypdLmF0dHJpYnV0ZXNbKl0udGl0bGVbKl0uQGNkYXRhIn1d";
+$paths = base64_decode($base64);
+$paths = json_decode($paths,true);
 
 
- // print_r($paths);
 
 //$input = "http://middleware.estrategasdigitales.net/nucleo/feed_service_content?url=aHR0cDovL2ZlZWRzLmVzbWFzLmNvbS9kYXRhLWZlZWRzLWVzbWFzL2lwYWQvZGVwb3J0ZXMuanM%3D";
 //$template = "http://middleware.estrategasdigitales.net/nucleo/feed_service_specific?url=aHR0cDovL2ZlZWRzLmVzbWFzLmNvbS9kYXRhLWZlZWRzLWVzbWFzL2lwYWQvMDEyOTI0MDEwMS54bWw=";
