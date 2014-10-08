@@ -17,7 +17,6 @@ Ext.define('TVSA.Viewport', {
             width       : 350,
             listeners : {
                 'itemclick' : function(_me, record, item, index, e ){
-                    console.log(record.data)
                     if(record.data.leaf)
                         label_tree1.setText(record.get("id"));
                 }
