@@ -55,6 +55,7 @@ class Node
 	private function _decodeDataURL($url)
 	{
 		$file = file_get_contents($url);
+
 		$file = preg_replace('/^\(/','',$file);
 		$file = preg_replace('/\)$/','',$file);
 
@@ -157,37 +158,16 @@ class Node
 
 	private function _extractData($record,$string) {
 
-	    $current_data = [];
-
-
-	    if(is_string($record))
-	    	return $record;
+	    $current_data = $record;
 
 	    foreach ($string as $name) {
 
-	    		if(is_array($record))
-	    		{
-		    		foreach ($record as $data) {
-			            if (key_exists($name, $current_data)) {
-			                    $current_data[] = $current_data[$name];
-			            } 
-		    		}
-
-
-	    		}else
-	    		{
-
-		            if (key_exists($name, $record)) {
-		                    $current_data = $record[$name];
-		            } else {
-
-		            }
-	    		}
-
-
-
+	            if (key_exists($name, $current_data)) {
+	                    $current_data = $current_data[$name];
+	            } else {
+	                    return null;
+	            }
 	    }
-
 
 	    return $current_data;
 	} 
@@ -218,7 +198,7 @@ class Node
 	    return $array;
 	}
 
-    private function _do($paths,$id,$j,$input,$_input,$template,$output,$pathParent = null)
+    private function __do($paths,$id,$j,$input,$_input,$template,$output,$pathParent = null)
     {
       // foreach ($paths as $path) {
 
@@ -291,7 +271,127 @@ class Node
 
 						}
 					}
-					$output = $this->_do($paths,$id,$i,$record,$inputs,$template,$output,$pathParent);
+					$output = $this->__do($paths,$id,$i,$record,$inputs,$template,$output,$pathParent);
+				
+				}
+
+         return $output;
+
+
+    }
+	private function    isAssociativeArray( &$arr ) {
+	    return  (bool)( preg_match( '/\D/', implode( array_keys( $arr ) ) ) );
+	}
+
+
+
+    private function _do($paths,$id,$j,$input,$_input,$template,$output,$pathParent = null)
+    {
+      // foreach ($paths as $path) {
+
+		$node = $paths[$id];
+
+
+			$path = $node["path"];
+
+			if ($path == "[*]")
+				$path = current(array_keys($input));
+			else
+				$path = preg_replace('/(\[\*\])$/', '', $path);
+
+
+
+			$pathParent = $path;
+
+
+			$store = $this->STORE;
+			$inputs = $store->get($input, "$.".$path);
+
+			$tpath = count($paths)-1;
+
+
+			if($id < $tpath)
+				$id++;
+
+
+
+			
+			if(is_array($inputs) and count($inputs) > 0)
+			foreach ($inputs as $i => $record) {
+
+
+				// if (!@array_key_exists($i, $output) and $j == 0)
+				//  	$output[$i] = $template;
+				    
+
+
+				 	if($this->isAssociativeArray($record))
+				 	{
+						foreach ($node["child"] as $child) {
+
+							$akey = explode(".",$child["key"]);
+							$key  = '["'.implode('"]["',$akey).'"]';
+
+							
+							$return = $this->_extractData($record,$akey);
+							
+							$avalue = explode(".",$child["value"]);
+							// $value  = '["'.implode('"]["',$avalue).'"]';
+							//   if($id > 0)
+								$avalue = str_replace("[*]", "", $avalue);
+							 	$value  = '["'.implode('"]["',$avalue).'"][]';
+
+
+							if(!empty($return))
+							{	
+								
+								eval("\$output[$j]$value = \"$return\";");	
+
+
+							}
+						}
+
+						$output = $this->_do($paths,$id,$i,$record,$inputs,$template,$output,$pathParent);
+				 	}else
+				 	{
+
+				 		foreach ($record as $ii => $rrecord) {
+
+
+							foreach ($node["child"] as $child) {
+
+								$akey = explode(".",$child["key"]);
+								$key  = '["'.implode('"]["',$akey).'"]';
+
+								
+								$return = $this->_extractData($rrecord,$akey);
+								
+								$avalue = explode(".",$child["value"]);
+								// $value  = '["'.implode('"]["',$avalue).'"]';
+								//   if($id > 0)
+
+									$avalue = str_replace("[*]", "", $avalue);
+								 	$value  = '["'.implode('"]["',$avalue).'"][]';
+
+
+								if(!empty($return))
+								{	
+
+									eval("\$output[$ii]$value = \"$return\";");	
+									
+
+								}
+							}
+
+							$output = $this->_do($paths,$id,$ii,$rrecord,$inputs,$template,$output,$pathParent);
+				 		}
+
+				 		
+				 	}
+				 		
+
+
+					
 				
 				}
 
@@ -400,7 +500,7 @@ class Node
     {
     	$paths = $this->_getPaths();
     	
-    	// print_r($paths);
+    	//print_r($paths);
     	// die;
     	//array_shift($paths);
 
@@ -408,7 +508,11 @@ class Node
     	$input    = $this->_getINPUT();
     	$template = $this->_getTEMPLATE();
 
-    	return $this->_do($paths,0,0,$input,$input,$template,$output=[]);
+
+    	if($paths[0]["path"] == "[*]")
+    		return $this->_do($paths,0,0,$input,$input,$template,$output=[]);
+    	else
+    		return $this->__do($paths,0,0,$input,$input,$template,$output=[]);
     }
 
     public function getDataFixed()

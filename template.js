@@ -1,0 +1,1 @@
+({"resources":[{"resource":[{"type":null,"attributes":[{"title":[{"@cdata":null}],"description":[{"@cdata":null}],"external_id":null,"pubDate":null,"enabled":null,"alternative_streams":[{"default":[{"@cdata":null}]}],"image_assets":[{"image_asset":[{"key":null,"url":null}]}]}]}]}]})
