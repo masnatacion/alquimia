@@ -521,7 +521,7 @@ class Node
     }
 
 
-    public function toRSS( $file = 'rss.xml', $encoding = 'UTF-8' ){
+public function toRSS( $file = 'rss.xml', $encoding = 'UTF-8', $header = '', $attributes = [] ){
     	$template = $this->_getTEMPLATE();
     	$nodes = $this->getData();
 		$writer = new XMLWriter();
@@ -561,12 +561,15 @@ class Node
     }
 
 
-    function toJSON($file = "json.json")
+    public function toJSON( $file = 'json.json', $function = '' )
     {
     	$data = $this->getData();
-    	$json =json_encode($data);
+    	if ( ! empty ( $function ) )
+    		$json = $function . '('. json_encode( $data ) .')';
+    	else
+    		$json = json_encode( $data );
 
-    	if($file !="json.json")
+    	if ( $file != 'json.json' )
     		file_put_contents($file, $json);
     	else
     		return $json;
