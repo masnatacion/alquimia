@@ -174,6 +174,8 @@ class Node
 
 
 	private function _fixkeys($array) {
+
+
 	    $numberCheck = false;
 	    foreach ($array as $k => $val) {
 
@@ -182,15 +184,27 @@ class Node
 	    	// echo "key =".$k."\n";
 	    	// echo "\n\n\n\n";
 
-	    	if(!is_numeric($k) and is_array($val) and array_key_exists(0, $val))
+	    		// echo count($val);
+	    		// print_r($val);
+	    		// echo "-------\n\n";
+	    	if (is_array($val) and count($val) >= 1) 
+	    	{
+
+	    		$array[$k] = $this->_fixkeys($val); //recurse
+	    	}
+	    	
+			if(is_array($val) and array_key_exists(0, $val))
 	    	{
 	    		//$numberCheck = array("k" => $k,"v"=>$val);
-	    		//print_r($val);
-	        	$array[$k] = $val[0];
+
+	    		if(count($val) > 1)
+	    			$array[$k] = $val;
+	    	    else
+	        		$array[$k] = $val[0];
 	        	//return $array;
 	    	}
 
-	        if (is_array($val) and count($val) > 1) $array[$k] = $this->_fixkeys($val); //recurse
+	        
 
 	    }
 
@@ -321,10 +335,9 @@ class Node
 
 
 				// if (!@array_key_exists($i, $output) and $j == 0)
-				//  	$output[$i] = $template;
+				//   	$output = $template;
 				    
-
-
+				  
 				 	if($this->isAssociativeArray($record))
 				 	{
 						foreach ($node["child"] as $child) {
@@ -344,7 +357,7 @@ class Node
 
 							if(!empty($return))
 							{	
-								
+								//print_r($value);
 								eval("\$output[$j]$value = \"$return\";");	
 
 
@@ -521,9 +534,9 @@ class Node
     }
 
 
-public function toRSS( $file = 'rss.xml', $encoding = 'UTF-8', $header = '', $attributes = [] ){
+	public function toRSS( $file = 'rss.xml', $encoding = 'UTF-8', $header = '', $attributes = [] ){
     	$template = $this->_getTEMPLATE();
-    	$nodes = $this->getData();
+    	$nodes = $this->getDataFixed();
 		$writer = new XMLWriter();
 		$writer->openURI($file);
 		$writer->startDocument( '1.0', $encoding );
@@ -548,7 +561,7 @@ public function toRSS( $file = 'rss.xml', $encoding = 'UTF-8', $header = '', $at
 
     public function toXML( $file = 'xml.xml', $encoding = 'UTF-8' ){
     	$template = $this->_getTEMPLATE();
-    	$nodes = $this->getData();
+    	$nodes = $this->getDataFixed();
 		$writer = new XMLWriter();  
 		$writer->openURI( $file );
 		$writer->startDocument( '1.0', $encoding );
@@ -563,7 +576,7 @@ public function toRSS( $file = 'rss.xml', $encoding = 'UTF-8', $header = '', $at
 
     public function toJSON( $file = 'json.json', $function = '' )
     {
-    	$data = $this->getData();
+    	$data = $this->getDataFixed();
     	if ( ! empty ( $function ) )
     		$json = $function . '('. json_encode( $data ) .')';
     	else
@@ -618,8 +631,8 @@ $paths = json_decode($paths,true);
 $node = new Node(["input" => $input, "template" => $template, "paths" =>$paths]);
 
 
-print_r($node->toJSON());
-// echo json_encode($input);
+print_r($node->toXML());
+echo file_get_contents("xml.xml");
 
 
 
